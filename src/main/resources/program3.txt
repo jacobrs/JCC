@@ -1,0 +1,10 @@
+/* float operations $test */
+
+test = 2
+_WhatIsLove = 2
+
+main {
+    integer float this = 3.124e-123
+    invalidFloat = 324+425e
+    read write *&#(
+}

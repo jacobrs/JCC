@@ -1,7 +1,7 @@
 package tokenizer
 
 import org.scalatest.{Matchers, WordSpec}
-import tokenizer.Token.{FLOAT, ID, INTEGER}
+import tokenizer.Token.{FLOAT, ID, INTEGER, PUNCTUATION}
 
 class TokenizerSpec extends WordSpec with Matchers {
 
@@ -72,6 +72,12 @@ class TokenizerSpec extends WordSpec with Matchers {
     "parse exponent floats" in {
       Tokenizer.parse("12.34e01") should be(List(FLOAT("12.34e0"), INTEGER("1")))
       Tokenizer.parse("12345.6789e-123") should be(List(FLOAT("12345.6789e-123")))
+    }
+
+    "parse punctuation" in {
+      Tokenizer.parse("Tokenizer.parse") should be (List(
+        ID("Tokenizer"), PUNCTUATION("."), ID("parse")
+      ))
     }
   }
 

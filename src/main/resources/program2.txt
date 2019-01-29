@@ -1,0 +1,12 @@
+/* main project */
+
+main {
+    $## oops
+    testing = 123
+    return testing
+    // hopefully this works
+}
+
+/*
+ramble on //test
+/* */

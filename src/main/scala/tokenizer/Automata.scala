@@ -18,5 +18,21 @@ object Automata {
   val ENDING_EXPONENT_FLOAT_TAG = "ENDING_EXPONENT_FLOAT"
   val ERROR_TAG = "ERROR"
   val PUNCTUATION_TAG = "PUNCTUATION"
+  val RESERVED_TAG = "RESERVED"
+  val OPERATOR_TAG = "OPERATOR"
+
+  val ReservedWords: Seq[String] = Seq(
+    "if",
+    "then",
+    "else",
+    "for",
+    "class",
+    "integer",
+    "float",
+    "read",
+    "write",
+    "return",
+    "main"
+  )
 
 }

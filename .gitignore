@@ -1,2 +1,4 @@
 .idea
 target
+*-parse.txt
+*-a2cc.txt

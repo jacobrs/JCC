@@ -5,6 +5,7 @@ import tokenizer.Automata._
 import tokenizer.Token._
 
 import scala.util.matching.Regex
+import scalaz.syntax.std.boolean._
 
 object Tokenizer extends Enumeration {
 
@@ -13,6 +14,7 @@ object Tokenizer extends Enumeration {
   private val AlphaNum = "([0-9]|[a-z]|[A-Z]|\\_)".r
   private val NonZero = "([1-9])".r
   private val Punctuation = "([<>\\.,:;{}\\(\\)\\[\\]=])".r
+  private val Operator = "([\\+\\-\\*\\/=\\&\\!\\|])".r
 
   def scan(body: String): String = {
     val multiLineCommentRegex: Regex = "/\\*(.|\n)*?\\*/(\n)?".r
@@ -37,7 +39,7 @@ object Tokenizer extends Enumeration {
               case AlphaNum(l) =>
                 newState = createIDState(s, l)
               case _ =>
-                tokens = tokens ++ Seq(ID(p.mkString("")))
+                tokens = tokens ++ Seq(generateIDOrReserved(p.mkString("")))
                 newState = runEmptyStateAfterTokenCompletion(c)
             }
           case State(INTEGER_TAG, p) =>
@@ -131,11 +133,16 @@ object Tokenizer extends Enumeration {
           case State(FLOAT_ZERO_INTEGER_TAG, p) =>
             tokens = tokens ++ Seq(FLOAT(p.mkString("")))
             newState = runEmptyStateAfterTokenCompletion(c)
+          case State(PUNCTUATION_TAG, p) =>
+            tokens = tokens ++ Seq(PUNCTUATION(p.mkString("")))
+            newState = runEmptyStateAfterTokenCompletion(c)
+          case State(OPERATOR_TAG, p) =>
+            tokens = tokens ++ Seq(OPERATOR(p.mkString("")))
+            newState = runEmptyStateAfterTokenCompletion(c)
           case s =>
-            System.out.println(s"Invalid state $s")
-            if(newState.name.eq(ERROR_TAG)) {
-              newState = State(STARTING_TAG, Seq())
-            }
+            System.out.println(
+              s"Invalid state ${s.name} around character ${s.prevChars.head}")
+            newState = runEmptyStateAfterTokenCompletion(c)
         }
         currentState = newState
       }
@@ -143,15 +150,25 @@ object Tokenizer extends Enumeration {
 
     currentState match {
       case State(ID_TAG, c) =>
-        tokens ++ Seq(ID(c.mkString("")))
+        tokens ++ Seq(generateIDOrReserved(c.mkString("")))
       case State(INTEGER_TAG, c) =>
         tokens ++ Seq(INTEGER(c.mkString("")))
       case State(FLOAT_TAG|NON_ZERO_FLOAT_TAG|ZERO_FLOAT_TAG|
                  FLOAT_INTEGER_TAG|FLOAT_ZERO_INTEGER_TAG, c) =>
         tokens ++ Seq(FLOAT(c.mkString("")))
+      case State(PUNCTUATION_TAG, c) =>
+        tokens ++ Seq(PUNCTUATION(c.mkString("")))
+      case State(OPERATOR_TAG, c) =>
+        tokens ++ Seq(OPERATOR(c.mkString("")))
+      case State(RESERVED_TAG, c) =>
+        tokens ++ Seq(RESERVED(c.mkString("")))
       case _ =>
         tokens
     }
+  }
+
+  def generateIDOrReserved(word: String): Token = {
+    ReservedWords.contains(word).fold(RESERVED(word), ID(word))
   }
 
   def createIDState(oldState: State, newChar: Char): State ={
@@ -165,7 +182,9 @@ object Tokenizer extends Enumeration {
       case NonZero(l) => State(INTEGER_TAG, Seq(l))
       case Digit(l) => State(ZERO_INTEGER_TAG, Seq(l))
       case Punctuation(l) => State(PUNCTUATION_TAG, Seq(l))
-      case _ => State(STARTING_TAG, Seq())
+      case Operator(l) => State(OPERATOR_TAG, Seq(l))
+      case ' '|'\n' => State(STARTING_TAG, Seq())
+      case _ => State(ERROR_TAG, Seq(terminatingToken))
     }
   }
 
