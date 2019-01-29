@@ -20,7 +20,7 @@ object Compiler {
       val tokens = Tokenizer.parse(program1)
       val output = tokens.map(token =>
         s"[${token.getClass.getSimpleName.toLowerCase()}:${token.value}]"
-      ).mkString("")
+      ).mkString("\n")
 
       writer.write(output)
       a2ccWriter.write(AtoCCConverter.convertToAtoCC(tokens))
