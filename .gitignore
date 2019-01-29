@@ -2,3 +2,5 @@
 target
 *-parse.txt
 *-a2cc.txt
+*.pages
+.DS_Store

@@ -28,6 +28,7 @@ object Tokenizer extends Enumeration {
     var tokens = Seq.empty[Token]
     var currentState = State(STARTING_TAG, Seq())
 
+    var i = 0
     cleanBody.foreach {
       c => {
         var newState: State = State(ERROR_TAG, Seq())
@@ -141,10 +142,11 @@ object Tokenizer extends Enumeration {
             newState = runEmptyStateAfterTokenCompletion(c)
           case s =>
             System.out.println(
-              s"Invalid state ${s.name} around character ${s.prevChars.head}")
+              s"Invalid state ${s.name} at character ${s.prevChars.head} position: $i")
             newState = runEmptyStateAfterTokenCompletion(c)
         }
         currentState = newState
+        i += 1
       }
     }
 
