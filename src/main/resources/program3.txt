@@ -1,3 +1,7 @@
+main{id = 1.23 + ((1.23  * 1.23 ) - 1.23 ) + 1.23; };
+
+/*
+
 0.01
 0.100
 1.1e9
@@ -13,4 +17,4 @@ main {
     integer float this = 3.124e-123
     invalidFloat = 324+425e
     read write *&#(
-}
+}*/

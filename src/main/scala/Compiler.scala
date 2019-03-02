@@ -1,5 +1,6 @@
 import java.io.{File, PrintWriter}
 
+import parser.Parser
 import tokenizer.{AtoCCConverter, Tokenizer}
 
 import scala.io.Source
@@ -11,7 +12,7 @@ object Compiler {
 
     val programFiles = 3
 
-    for(i <- 1 to programFiles) {
+    for(i <- 3 to programFiles) {
 
       val program1 = Source.fromResource(s"program$i.txt").getLines().mkString("\n")
       val writer = new PrintWriter(new File(s"program$i-parse.txt"))
@@ -22,11 +23,16 @@ object Compiler {
         s"[${token.getClass.getSimpleName.toLowerCase()}:${token.value}]"
       ).mkString("\n")
 
+      Parser.parse(tokens)
+
+      /*
       writer.write(output)
       a2ccWriter.write(AtoCCConverter.convertToAtoCC(tokens))
 
       a2ccWriter.close()
       writer.close()
+      */
+
 
     }
 

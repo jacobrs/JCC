@@ -1,0 +1,55 @@
+prog                    -> classDeclWrapper funcDefWrapper main funcBody ;
+classDeclWrapper        -> EPSILON | classDecl classDeclWrapper
+classDecl               -> class id optionalIDExt { genericDeclWrapper } ;
+funcDefWrapper          -> EPSILON | funcDef funcDefWrapper
+funcDef                 -> funcHead funcBody ;
+funcBody                -> { statementWrapper }
+optionalIDExt           -> EPSILON | : id idWrapper
+idWrapper               -> EPSILON | idEntity idWrapper
+idEntity                -> , id
+genericDeclWrapper      -> EPSILON | genericDecl genericDeclWrapper
+genericDecl             -> type id genericExtension ;
+genericExtension        -> arraySizeWrapper | ( fParams )
+funcHead                -> type optionalIDSR ( fParams )
+optionalIDSR            -> id optionalIDSRExt
+optionalIDSRExt         -> EPSILON | sr id
+type                    -> integer | float | id
+fParams                 -> EPSILON | type id arraySizeWrapper fParamsTailWrapper
+fParamsTailWrapper      -> EPSILON | fParamsTail fParamsTailWrapper
+fParamsTail             -> , type id arraySizeWrapper
+aParams                 -> EPSILON | expr aParamsTailWrapper
+aParamsTailWrapper      -> EPSILON | aParamsTail aParamsTailWrapper
+aParamsTail             -> , expr
+statementWrapper        -> EPSILON | statement statementWrapper
+assignStatAndVar        -> integer id genericExtension assignOp expr ; | float id genericExtension assignOp expr ; | id statOrVarExt assignOp expr ;
+statOrVarExt            -> id genericExtension ; | indiceWrapper indiceExtInt | ( aParams ) . variableIdnestWrapper | EPSILON
+indiceExtInt            -> EPSILON | . variableIdnestWrapper
+statement               -> assignStatAndVar | if ( expr ) then statBlock else statBlock ; | for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; | read ( variableIdnestWrapper ) ; | write ( expr ) ; | return ( expr ) ;
+arraySizeWrapper        -> EPSILON | arraySize arraySizeWrapper
+arraySize               -> [ intNum ]
+assignStat              -> variableIdnestWrapper assignOp expr
+expr                    -> arithExpr exprExt
+exprExt                 -> relOp arithExpr | term | EPSILON
+statBlock               -> EPSILON | { statementWrapper } | statement
+relExpr                 -> arithExpr relOp arithExpr
+arithExpr               -> term arithExprPrime
+arithExprPrime          -> EPSILON | addOp term arithExprPrime
+variableIdnestWrapper   -> EPSILON | variableIdnest variableIdnestWrapper
+variableIdnest          -> id indiceWrapper
+relOp                   -> eq | neq | lt | gt | leq | geq
+addOp                   -> + | - | or
+multOp                  -> * | / | and
+assignOp                -> =
+term                    -> factor termPrime
+termPrime               -> EPSILON | multOp factor termPrime
+variableAndfunctionCall -> id T2
+T2                      -> indice indiceWrapper T3 | ( aParams ) T3 | variableAndfunctionCall
+T3                      -> EPSILON | .
+factor                  -> variableAndfunctionCall | intNum | floatNum | ( arithExpr ) | not factor
+idnestWrapper           -> EPSILON | idnest idnestWrapper
+idnest                  -> id idnestExt
+idnestExt               -> indiceWrapper . | ( aParams ) .
+indiceWrapper           -> EPSILON | indice indiceWrapper
+indice                  -> [ arithExpr ]
+
+
