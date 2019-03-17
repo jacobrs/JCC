@@ -1,7 +1,7 @@
 package tokenizer
 
 import org.scalatest.{Matchers, WordSpec}
-import tokenizer.Token.{FLOAT, ID, INTEGER, PUNCTUATION}
+import tokenizer.Token._
 
 class TokenizerSpec extends WordSpec with Matchers {
 
@@ -78,6 +78,21 @@ class TokenizerSpec extends WordSpec with Matchers {
       Tokenizer.parse("Tokenizer.parse") should be (List(
         ID("Tokenizer"), PUNCTUATION("."), ID("parse")
       ))
+    }
+
+    "parse multi-character operator" in {
+      Tokenizer.parse("||") should be (List(OPERATOR("||")))
+      Tokenizer.parse("&&") should be (List(OPERATOR("&&")))
+      Tokenizer.parse("|&") should be (List(OPERATOR("|"), OPERATOR("&")))
+    }
+
+    "parse multi-character punctuation" in {
+      Tokenizer.parse("<=") should be (List(PUNCTUATION("<=")))
+      Tokenizer.parse(">=") should be (List(PUNCTUATION(">=")))
+      Tokenizer.parse("==") should be (List(PUNCTUATION("==")))
+      Tokenizer.parse("<>") should be (List(PUNCTUATION("<>")))
+      Tokenizer.parse("::") should be (List(PUNCTUATION("::")))
+      Tokenizer.parse("<:") should be (List(PUNCTUATION("<"), PUNCTUATION(":")))
     }
   }
 

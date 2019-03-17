@@ -1,3 +1,1 @@
-main {
-     this = help.me(123 + 444)
- }
+::

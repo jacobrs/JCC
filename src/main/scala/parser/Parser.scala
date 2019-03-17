@@ -80,7 +80,7 @@ object Parser {
         } else {
           error = true
         }
-      case FLOAT(_) | INTEGER(_) | ID(_) | RESERVED("main") =>
+      case RESERVED("float") | RESERVED("integer") | ID(_) | RESERVED("main") =>
         println("classDeclWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
@@ -112,7 +112,7 @@ object Parser {
     var error = false
     val root = new ASTNode("funcDefWrapper")
     lookahead match {
-      case FLOAT(_) | INTEGER(_) | ID(_) =>
+      case RESERVED("float") | RESERVED("integer") | ID(_) =>
         if (funcDef(root) && funcDefWrapper(root)) {
           println("funcDefWrapper -> funcDef funcDefWrapper")
         } else {
@@ -132,7 +132,7 @@ object Parser {
     var error = false
     val root = new ASTNode("funcDef")
     lookahead match {
-      case FLOAT(_) | INTEGER(_) | ID(_) =>
+      case RESERVED("float") | RESERVED("integer") | ID(_) =>
         if (funcHead(root) && funcBody(root) && m(PUNCTUATION(";"), root)) {
           println("funcDef -> funcHead funcBody")
         } else {
@@ -283,7 +283,7 @@ object Parser {
     var error = false
     val root = new ASTNode("funcHead")
     lookahead match {
-      case FLOAT(_) | ID(_) | INTEGER(_) =>
+      case RESERVED("float") | RESERVED("integer") | ID(_) =>
         if (`type`(root) && optionalIDSR(root) && m(PUNCTUATION("("), root)
             && fParams(root) && m(PUNCTUATION(")"), root)) {
           println("funcHead -> type optionalIDSR ( fParams )")
@@ -318,9 +318,9 @@ object Parser {
     var error = false
     val root = new ASTNode("optionalIDSRExt")
     lookahead match {
-      case ID(_) =>
-        if (m(PUNCTUATION(":"), root) && m(ID(""), root)) {
-          println("optionalIDSRExt -> sr id")
+      case PUNCTUATION("::") =>
+        if (m(PUNCTUATION("::"), root) && m(ID(""), root)) {
+          println("optionalIDSRExt -> :: id")
         } else {
           error = true
         }
@@ -860,13 +860,13 @@ object Parser {
     var error = false
     val root = new ASTNode("relOp")
     lookahead match {
-      case PUNCTUATION("=") =>
+      case PUNCTUATION("==") =>
         if(m(PUNCTUATION("="), root)){
           println("relOp -> eq")
         } else {
           error = true
         }
-      case OPERATOR("!=") =>
+      case PUNCTUATION("<>") =>
         if(m(OPERATOR("!="), root)){
           println("relOp -> neq")
         } else {
@@ -884,14 +884,14 @@ object Parser {
         } else {
           error = true
         }
-      case OPERATOR("<=") =>
-        if(m(OPERATOR("<="), root)){
+      case PUNCTUATION("<=") =>
+        if(m(PUNCTUATION("<="), root)){
           println("relOp -> leq")
         } else {
           error = true
         }
-      case OPERATOR(">=") =>
-        if(m(OPERATOR(">="), root)){
+      case PUNCTUATION(">=") =>
+        if(m(PUNCTUATION(">="), root)){
           println("relOp -> geq")
         } else {
           error = true

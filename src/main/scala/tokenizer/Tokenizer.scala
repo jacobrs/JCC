@@ -14,7 +14,7 @@ object Tokenizer extends Enumeration {
   private val AlphaNum = "([0-9]|[a-z]|[A-Z]|\\_)".r
   private val NonZero = "([1-9])".r
   private val Punctuation = "([<>\\.,:;{}\\(\\)\\[\\]=])".r
-  private val Operator = "([\\+\\-\\*\\/=\\&\\!\\|])".r
+  private val Operator = "([\\+\\-\\*\\/\\&\\!\\|])".r
 
   def scan(body: String): String = {
     val multiLineCommentRegex: Regex = "/\\*(.|\n)*?\\*/(\n)?".r
@@ -135,9 +135,27 @@ object Tokenizer extends Enumeration {
             tokens = tokens ++ Seq(FLOAT(p.mkString("")))
             newState = runEmptyStateAfterTokenCompletion(c)
           case State(PUNCTUATION_TAG, p) =>
+            val compound = p.mkString("") + c
+            compound match {
+              case "<=" | ">=" | "::" | "==" | "<>" =>
+                newState = State(POTENTIAL_DOUBLE_PUNCTUATION_TAG, p ++ Seq(c))
+              case _ =>
+                tokens = tokens ++ Seq(PUNCTUATION(p.mkString("")))
+                newState = runEmptyStateAfterTokenCompletion(c)
+            }
+          case State(POTENTIAL_DOUBLE_PUNCTUATION_TAG, p) =>
             tokens = tokens ++ Seq(PUNCTUATION(p.mkString("")))
             newState = runEmptyStateAfterTokenCompletion(c)
           case State(OPERATOR_TAG, p) =>
+            val compound = p.mkString("") + c
+            compound match {
+              case "&&" | "||" =>
+                newState = State(POTENTIAL_DOUBLE_OPERATOR_TAG, p ++ Seq(c))
+              case _ =>
+                tokens = tokens ++ Seq(OPERATOR(p.mkString("")))
+                newState = runEmptyStateAfterTokenCompletion(c)
+            }
+          case State(POTENTIAL_DOUBLE_OPERATOR_TAG, p) =>
             tokens = tokens ++ Seq(OPERATOR(p.mkString("")))
             newState = runEmptyStateAfterTokenCompletion(c)
           case s =>
@@ -158,9 +176,9 @@ object Tokenizer extends Enumeration {
       case State(FLOAT_TAG|NON_ZERO_FLOAT_TAG|ZERO_FLOAT_TAG|
                  FLOAT_INTEGER_TAG|FLOAT_ZERO_INTEGER_TAG, c) =>
         tokens ++ Seq(FLOAT(c.mkString("")))
-      case State(PUNCTUATION_TAG, c) =>
+      case State(PUNCTUATION_TAG | POTENTIAL_DOUBLE_PUNCTUATION_TAG, c) =>
         tokens ++ Seq(PUNCTUATION(c.mkString("")))
-      case State(OPERATOR_TAG, c) =>
+      case State(OPERATOR_TAG | POTENTIAL_DOUBLE_OPERATOR_TAG, c) =>
         tokens ++ Seq(OPERATOR(c.mkString("")))
       case State(RESERVED_TAG, c) =>
         tokens ++ Seq(RESERVED(c.mkString("")))
