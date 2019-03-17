@@ -20,6 +20,16 @@ class ASTSpec extends WordSpec with Matchers  {
       tree.value should be("prog")
       tree.children.head.value should be("main")
     }
+
+    "Should create mutable nodes" in {
+      val tree = new ASTNode("prog")
+      mutateNode(tree)
+      tree.children.size should be(1)
+    }
+  }
+
+  private def mutateNode(node: ASTNode): Unit = {
+    node.addChild(new ASTNode("mutatedChild"))
   }
 
 }
