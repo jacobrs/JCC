@@ -14,6 +14,8 @@ object Compiler {
 
     for(i <- 3 to programFiles) {
 
+      System.out.println(s"Compiling program$i.txt")
+
       val program1 = Source.fromResource(s"program$i.txt").getLines().mkString("\n")
       val writer = new PrintWriter(new File(s"program$i-parse.txt"))
       val a2ccWriter = new PrintWriter(new File(s"program$i-a2cc.txt"))

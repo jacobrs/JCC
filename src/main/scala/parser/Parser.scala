@@ -11,12 +11,12 @@ object Parser {
 
   var lookahead: Token = OPERATOR("")
   var tokenIterator: Iterator[Token] = Iterator()
+  var root: ASTNode = _
 
   case class ParseResult(productions: Seq[String], errors: Seq[String])
 
   def parse(tokens: Seq[Token]): ParseResult = {
-
-    var error = false
+    root = new ASTNode("prog")
     tokenIterator = tokens.iterator
     lookahead = tokenIterator.next()
 
@@ -50,7 +50,11 @@ object Parser {
     }
 
     if(result){
-      lookahead = tokenIterator.next()
+      if(tokenIterator.hasNext) {
+        lookahead = tokenIterator.next()
+      } else {
+        lookahead = TERMINATION("")
+      }
     }
     result
   }
@@ -58,7 +62,8 @@ object Parser {
   private def prog(): Boolean = {
     var error = false
     if(classDeclWrapper() && funcDefWrapper() && m(RESERVED("main"))
-      && funcBody() && m(PUNCTUATION(";"))) {
+      && funcBody() && m(PUNCTUATION(";")) && m(TERMINATION(""))) {
+      println("prog -> classDeclWrapper funcDefWrapper main funcBody ;")
       error = true
     }
     !error
@@ -234,7 +239,7 @@ object Parser {
         } else {
           error = true
         }
-      case PUNCTUATION(";") | OPERATOR("=") | PUNCTUATION("[") =>
+      case PUNCTUATION(";") | PUNCTUATION("=") | PUNCTUATION("[") =>
         if (arraySizeWrapper()) {
           println("genericExtension -> arraySizeWrapper")
         } else {
@@ -488,6 +493,8 @@ object Parser {
         } else {
           error = true
         }
+      case PUNCTUATION("=") =>
+        println("statOrVarExt -> EPSILON")
       case _ =>
         error = true
     }
@@ -572,7 +579,7 @@ object Parser {
         } else {
           error = true
         }
-      case PUNCTUATION(")") | PUNCTUATION(",") | PUNCTUATION(";") | OPERATOR("=") =>
+      case PUNCTUATION(")") | PUNCTUATION(",") | PUNCTUATION(";") | PUNCTUATION("=") =>
         println("arraySizeWrapper -> EPSILON")
       case _ =>
         error = true
@@ -598,7 +605,7 @@ object Parser {
   private def assignStat(): Boolean = {
     var error = false
     lookahead match {
-      case OPERATOR("=") | ID(_) =>
+      case PUNCTUATION("=") | ID(_) =>
         if (variableIdnestWrapper() && assignOp() && expr()) {
           println("assignStat -> variable assignOp expr")
         } else {
@@ -628,7 +635,7 @@ object Parser {
   private def exprExt(): Boolean = {
     var error = false
     lookahead match {
-      case OPERATOR("=") | OPERATOR(">") | OPERATOR(">=")
+      case PUNCTUATION("=") | OPERATOR(">") | OPERATOR(">=")
            | OPERATOR("<=") | OPERATOR("<") | OPERATOR("!=") =>
         if (relOp() && arithExpr()) {
           println("exprExt -> relOp arithExpr")
@@ -714,7 +721,7 @@ object Parser {
           error = true
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | PUNCTUATION(",") | PUNCTUATION(";") |
-          PUNCTUATION("]") | OPERATOR("=") | FLOAT(_) | INTEGER(_) | OPERATOR(">=") |
+          PUNCTUATION("]") | PUNCTUATION("=") | FLOAT(_) | INTEGER(_) | OPERATOR(">=") |
           OPERATOR("<=") | OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") |
           OPERATOR("!") =>
         println("arithExprPrime -> EPSILON")
@@ -733,7 +740,7 @@ object Parser {
         } else {
           error = true
         }
-      case PUNCTUATION(")") | OPERATOR("=") =>
+      case PUNCTUATION(")") | PUNCTUATION("=") =>
         println("variableIdnestWrapper -> EPSILON")
       case _ =>
         error = true
@@ -759,8 +766,8 @@ object Parser {
   private def relOp(): Boolean = {
     var error = false
     lookahead match {
-      case OPERATOR("=") =>
-        if(m(OPERATOR("="))){
+      case PUNCTUATION("=") =>
+        if(m(PUNCTUATION("="))){
           println("relOp -> eq")
         } else {
           error = true
@@ -858,8 +865,8 @@ object Parser {
   private def assignOp(): Boolean = {
     var error = false
     lookahead match {
-      case OPERATOR("=") =>
-        if (m(OPERATOR("="))) {
+      case PUNCTUATION("=") =>
+        if (m(PUNCTUATION("="))) {
           println("assignOp -> =")
         } else {
           error = true
@@ -895,7 +902,7 @@ object Parser {
           error = true
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | OPERATOR("+") | PUNCTUATION(",") |
-           PUNCTUATION(";") | OPERATOR("-") | OPERATOR("]") | OPERATOR("=") | FLOAT(_) |
+           PUNCTUATION(";") | OPERATOR("-") | OPERATOR("]") | PUNCTUATION("=") | FLOAT(_) |
            INTEGER(_) | OPERATOR(">=") | OPERATOR("||") | OPERATOR("<=") |
            OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") | OPERATOR("!") =>
         println("termPrime -> EPSILON")
@@ -954,7 +961,7 @@ object Parser {
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | OPERATOR("+") | OPERATOR("*") |
            PUNCTUATION(",") | OPERATOR("-") | PUNCTUATION(";") | OPERATOR("]") |
-           OPERATOR("=") | FLOAT(_) | OPERATOR("&&") |
+           PUNCTUATION("=") | FLOAT(_) | OPERATOR("&&") |
            INTEGER(_) | OPERATOR(">=") | OPERATOR("||") | OPERATOR("<=") |
            OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") | OPERATOR("!") =>
         println("T3 -> EPSILON")
@@ -1065,7 +1072,7 @@ object Parser {
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | OPERATOR("+") | OPERATOR("*") |
            PUNCTUATION(",") | OPERATOR("-") | PUNCTUATION(";") | OPERATOR("]") |
-           OPERATOR("=") | FLOAT(_) | OPERATOR("&&") |
+           PUNCTUATION("=") | FLOAT(_) | OPERATOR("&&") |
            INTEGER(_) | OPERATOR(">=") | OPERATOR("||") | OPERATOR("<=") |
            OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") | OPERATOR("!") =>
         println("indiceWrapper -> EPSILON")

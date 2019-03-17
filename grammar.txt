@@ -29,7 +29,7 @@ arraySizeWrapper        -> EPSILON | arraySize arraySizeWrapper
 arraySize               -> [ intNum ]
 assignStat              -> variableIdnestWrapper assignOp expr
 expr                    -> arithExpr exprExt
-exprExt                 -> relOp arithExpr | term | EPSILON
+exprExt                 -> relOp arithExpr | EPSILON
 statBlock               -> EPSILON | { statementWrapper } | statement
 relExpr                 -> arithExpr relOp arithExpr
 arithExpr               -> term arithExprPrime
@@ -45,11 +45,11 @@ termPrime               -> EPSILON | multOp factor termPrime
 variableAndfunctionCall -> id T2
 T2                      -> indice indiceWrapper T3 | ( aParams ) T3 | variableAndfunctionCall
 T3                      -> EPSILON | .
-factor                  -> variableAndfunctionCall | intNum | floatNum | ( arithExpr ) | not factor
+sign                    -> + | -
+factor                  -> variableAndfunctionCall | intNum | floatNum | ( arithExpr ) | not factor | sign factor
 idnestWrapper           -> EPSILON | idnest idnestWrapper
 idnest                  -> id idnestExt
 idnestExt               -> indiceWrapper . | ( aParams ) .
 indiceWrapper           -> EPSILON | indice indiceWrapper
 indice                  -> [ arithExpr ]
-
 

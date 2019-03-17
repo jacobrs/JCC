@@ -4,3 +4,4 @@ target
 *-a2cc.txt
 *.pages
 .DS_Store
+*.iml

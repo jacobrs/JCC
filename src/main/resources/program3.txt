@@ -1,4 +1,6 @@
-main{id = 1.23 + ((1.23  * 1.23 ) - 1.23 ) + 1.23; };
+main{
+    id = 1.23 + ((1.23  * 1.23 ) - 1.23 ) + 1.23;
+};
 
 /*
 
@@ -8,7 +10,7 @@ main{id = 1.23 + ((1.23  * 1.23 ) - 1.23 ) + 1.23; };
 1.1e+876
 1.9e-997
 
-/* float operations $test */
+/* float operations $test
 
 test = 2
 _WhatIsLove = 2

@@ -12,5 +12,6 @@ object Token {
   case class OPERATOR(value: String) extends Token
   case class RESERVED(value: String) extends Token
   case class PUNCTUATION(value: String) extends Token
+  case class TERMINATION(value: String) extends Token
 
 }
