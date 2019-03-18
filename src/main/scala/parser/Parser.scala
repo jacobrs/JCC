@@ -503,22 +503,43 @@ object Parser {
     val root = new ASTNode("assignStatAndVar")
     lookahead match {
       case RESERVED("integer") =>
-        if (m(RESERVED("integer"), root) && m(ID(""), root) && genericExtension(root) && assignOp(root)
-          && expr(root) && m(PUNCTUATION(";"), root)) {
+        if (m(RESERVED("integer"), root) && m(ID(""), root) && genericExtension(root) && optionalAssignOp(root)) {
           println("assignStatAndVar -> integer id genericExtension assignOp expr ;")
         } else {
           error = true
         }
       case RESERVED("float") =>
-        if (m(RESERVED("float"), root) && m(ID(""), root) && genericExtension(root) && assignOp(root)
-          && expr(root) && m(PUNCTUATION(";"), root)) {
+        if (m(RESERVED("float"), root) && m(ID(""), root) && genericExtension(root) && optionalAssignOp(root)) {
           println("assignStatAndVar -> float id genericExtension assignOp expr ;")
         } else {
           error = true
         }
       case ID(_) =>
-        if (m(ID(""), root) && statOrVarExt(root) && assignOp(root) && expr(root) && m(PUNCTUATION(";"), root)) {
+        if (m(ID(""), root) && statOrVarExt(root) && optionalAssignOp(root)) {
           println("assignStatAndVar -> id statOrVarExt assignOp expr ;")
+        } else {
+          error = true
+        }
+      case _ =>
+        error = true
+    }
+    parent.addChild(root)
+    !error
+  }
+
+  private def optionalAssignOp(parent: ASTNode): Boolean = {
+    var error = false
+    val root = new ASTNode("optionalAssignOp")
+    lookahead match {
+      case PUNCTUATION("=") =>
+        if (assignOp(root) && expr(root) && m(PUNCTUATION(";"), root)) {
+          println("optionalAssignOp -> assignOp expr ;")
+        } else {
+          error = true
+        }
+      case PUNCTUATION(";") =>
+        if (m(PUNCTUATION(";"), root)) {
+          println("optionalAssignOp -> ;")
         } else {
           error = true
         }
@@ -547,12 +568,12 @@ object Parser {
           error = true
         }
       case ID(_) =>
-        if (m(ID(""), root) && genericExtension(root) && m(PUNCTUATION(";"), root)) {
+        if (m(ID(""), root) && genericExtension(root)) {
           println("statOrVarExt -> id genericExtension ;")
         } else {
           error = true
         }
-      case PUNCTUATION("=") =>
+      case PUNCTUATION("=") | PUNCTUATION(";") =>
         println("statOrVarExt -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
@@ -572,7 +593,7 @@ object Parser {
         } else {
           error = true
         }
-      case PUNCTUATION("}") =>
+      case PUNCTUATION("}") | PUNCTUATION("=") =>
         println("indiceExtInt -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
@@ -694,7 +715,7 @@ object Parser {
     var error = false
     val root = new ASTNode("expr")
     lookahead match {
-      case PUNCTUATION(",") | OPERATOR("!") | FLOAT(_) | INTEGER(_) | ID(_) =>
+      case PUNCTUATION("(") | OPERATOR("+") | OPERATOR("-") | OPERATOR("!") | FLOAT(_) | INTEGER(_) | ID(_) =>
         if (arithExpr(root) && exprExt(root)) {
           println("expr -> arithExpr exprExt")
         } else {
@@ -711,8 +732,8 @@ object Parser {
     var error = false
     val root = new ASTNode("exprExt")
     lookahead match {
-      case PUNCTUATION("=") | OPERATOR(">") | OPERATOR(">=")
-           | OPERATOR("<=") | OPERATOR("<") | OPERATOR("!=") =>
+      case PUNCTUATION("=") | PUNCTUATION(">") | PUNCTUATION(">=") |
+           PUNCTUATION("<=") | PUNCTUATION("<") | PUNCTUATION("<>") =>
         if (relOp(root) && arithExpr(root)) {
           println("exprExt -> relOp arithExpr")
         } else {
@@ -807,8 +828,8 @@ object Parser {
           error = true
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | PUNCTUATION(",") | PUNCTUATION(";") |
-          PUNCTUATION("]") | PUNCTUATION("=") | FLOAT(_) | INTEGER(_) | OPERATOR(">=") |
-          OPERATOR("<=") | OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") |
+          PUNCTUATION("]") | PUNCTUATION("=") | FLOAT(_) | INTEGER(_) | PUNCTUATION(">=") |
+          PUNCTUATION("<=") | PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") |
           OPERATOR("!") =>
         println("arithExprPrime -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
@@ -844,8 +865,8 @@ object Parser {
     val root = new ASTNode("variableIdnest")
     lookahead match {
       case ID(_) =>
-        if(m(ID(""), root) && variableIdnest(root)){
-          println("variableIdnest -> id variableIdnest")
+        if(m(ID(""), root) && indiceWrapper(root)){
+          println("variableIdnest -> id indiceWrapper")
         } else {
           error = true
         }
@@ -861,25 +882,25 @@ object Parser {
     val root = new ASTNode("relOp")
     lookahead match {
       case PUNCTUATION("==") =>
-        if(m(PUNCTUATION("="), root)){
+        if(m(PUNCTUATION("=="), root)){
           println("relOp -> eq")
         } else {
           error = true
         }
       case PUNCTUATION("<>") =>
-        if(m(OPERATOR("!="), root)){
+        if(m(PUNCTUATION("<>"), root)){
           println("relOp -> neq")
         } else {
           error = true
         }
-      case OPERATOR("<") =>
-        if(m(OPERATOR("<"), root)){
+      case PUNCTUATION("<") =>
+        if(m(PUNCTUATION("<"), root)){
           println("relOp -> lt")
         } else {
           error = true
         }
-      case OPERATOR(">") =>
-        if(m(OPERATOR(">"), root)){
+      case PUNCTUATION(">") =>
+        if(m(PUNCTUATION(">"), root)){
           println("relOp -> gt")
         } else {
           error = true
@@ -1006,9 +1027,9 @@ object Parser {
           error = true
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | OPERATOR("+") | PUNCTUATION(",") |
-           PUNCTUATION(";") | OPERATOR("-") | OPERATOR("]") | PUNCTUATION("=") | FLOAT(_) |
-           INTEGER(_) | OPERATOR(">=") | OPERATOR("||") | OPERATOR("<=") |
-           OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") | OPERATOR("!") =>
+           PUNCTUATION(";") | OPERATOR("-") | PUNCTUATION("]") | PUNCTUATION("=") | FLOAT(_) |
+           INTEGER(_) | PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") |
+           PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") | OPERATOR("!") =>
         println("termPrime -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
@@ -1023,7 +1044,7 @@ object Parser {
     val root = new ASTNode("variableAndFunctionCall")
     lookahead match {
       case ID(_) =>
-        if (m(ID(""), root) && T2(root)) {
+        if (m(ID(""), root) && T3(root) && T2(root)) {
           println("variableAndFunctionCall -> id T2")
         } else {
           error = true
@@ -1055,6 +1076,14 @@ object Parser {
         } else {
           error = true
         }
+      case PUNCTUATION(")") | OPERATOR("+") | OPERATOR("*") | PUNCTUATION(",") | OPERATOR("-") |
+           OPERATOR("/") | PUNCTUATION(";") | PUNCTUATION("]") | OPERATOR("&&") | PUNCTUATION("==") |
+           PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") | PUNCTUATION("<") |
+           PUNCTUATION(">") | PUNCTUATION("<>") =>
+        println("T2 -> EPSILON")
+        root.addChild(new ASTNode("EPSILON"))
+      case _ =>
+        error = true
     }
     parent.addChild(root)
     !error
@@ -1071,12 +1100,35 @@ object Parser {
           error = true
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | OPERATOR("+") | OPERATOR("*") |
-           PUNCTUATION(",") | OPERATOR("-") | PUNCTUATION(";") | OPERATOR("]") |
-           PUNCTUATION("=") | FLOAT(_) | OPERATOR("&&") |
-           INTEGER(_) | OPERATOR(">=") | OPERATOR("||") | OPERATOR("<=") |
-           OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") | OPERATOR("!") =>
+           PUNCTUATION(",") | OPERATOR("-") | PUNCTUATION(";") | PUNCTUATION("]") | PUNCTUATION("[") |
+           PUNCTUATION("=") | OPERATOR("&&") | OPERATOR("/") |
+           PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") |
+           PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") =>
         println("T3 -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
+      case _ =>
+        error = true
+    }
+    parent.addChild(root)
+    !error
+  }
+
+  private def sign(parent: ASTNode): Boolean = {
+    var error = false
+    val root = new ASTNode("sign")
+    lookahead match {
+      case OPERATOR("+") =>
+        if (m(OPERATOR("+"), root)) {
+          println("sign -> +")
+        } else {
+          error = true
+        }
+      case OPERATOR("-") =>
+        if (m(OPERATOR("-"), root)) {
+          println("sign -> -")
+        } else {
+          error = true
+        }
       case _ =>
         error = true
     }
@@ -1112,9 +1164,15 @@ object Parser {
         } else {
           error = true
         }
-      case PUNCTUATION("!") =>
-        if (m(PUNCTUATION("!"), root) && factor(root)) {
+      case OPERATOR("!") =>
+        if (m(OPERATOR("!"), root) && factor(root)) {
           println("factor -> not factor")
+        } else {
+          error = true
+        }
+      case OPERATOR("+") | OPERATOR("-") =>
+        if (sign(root) && factor(root)) {
+          println("factor -> sign factor")
         } else {
           error = true
         }
@@ -1194,10 +1252,10 @@ object Parser {
           error = true
         }
       case PUNCTUATION("(") | PUNCTUATION(")") | OPERATOR("+") | OPERATOR("*") |
-           PUNCTUATION(",") | OPERATOR("-") | PUNCTUATION(";") | OPERATOR("]") |
-           PUNCTUATION("=") | FLOAT(_) | OPERATOR("&&") |
-           INTEGER(_) | OPERATOR(">=") | OPERATOR("||") | OPERATOR("<=") |
-           OPERATOR("<") | OPERATOR(">") | ID(_) | OPERATOR("!=") | OPERATOR("!") =>
+           PUNCTUATION(",") | OPERATOR("-") | PUNCTUATION(";") | PUNCTUATION("]") |
+           PUNCTUATION("=") | FLOAT(_) | OPERATOR("&&") | PUNCTUATION(".") |
+           INTEGER(_) | PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") |
+           PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") | OPERATOR("!") =>
         println("indiceWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>

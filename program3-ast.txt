@@ -12,52 +12,14 @@
             id
             statOrVarExt
               EPSILON
-            assignOp
-              =
-            expr
-              arithExpr
-                term
-                  factor
-                    1.23
-                  termPrime
-                    EPSILON
-                arithExprPrime
-                  addOp
-                    +
+            optionalAssignOp
+              assignOp
+                =
+              expr
+                arithExpr
                   term
                     factor
-                      (
-                      arithExpr
-                        term
-                          factor
-                            (
-                            arithExpr
-                              term
-                                factor
-                                  1.23
-                                termPrime
-                                  multOp
-                                    *
-                                  factor
-                                    1.23
-                                  termPrime
-                                    EPSILON
-                              arithExprPrime
-                                EPSILON
-                            )
-                          termPrime
-                            EPSILON
-                        arithExprPrime
-                          addOp
-                            -
-                          term
-                            factor
-                              1.23
-                            termPrime
-                              EPSILON
-                          arithExprPrime
-                            EPSILON
-                      )
+                      1.23
                     termPrime
                       EPSILON
                   arithExprPrime
@@ -65,14 +27,53 @@
                       +
                     term
                       factor
-                        1.23
+                        (
+                        arithExpr
+                          term
+                            factor
+                              (
+                              arithExpr
+                                term
+                                  factor
+                                    1.23
+                                  termPrime
+                                    multOp
+                                      *
+                                    factor
+                                      1.23
+                                    termPrime
+                                      EPSILON
+                                arithExprPrime
+                                  EPSILON
+                              )
+                            termPrime
+                              EPSILON
+                          arithExprPrime
+                            addOp
+                              -
+                            term
+                              factor
+                                1.23
+                              termPrime
+                                EPSILON
+                            arithExprPrime
+                              EPSILON
+                        )
                       termPrime
                         EPSILON
                     arithExprPrime
-                      EPSILON
-              exprExt
-                EPSILON
-            ;
+                      addOp
+                        +
+                      term
+                        factor
+                          1.23
+                        termPrime
+                          EPSILON
+                      arithExprPrime
+                        EPSILON
+                exprExt
+                  EPSILON
+              ;
         statementWrapper
           EPSILON
       }

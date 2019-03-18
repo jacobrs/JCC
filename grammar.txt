@@ -21,8 +21,9 @@ aParams                 -> EPSILON | expr aParamsTailWrapper
 aParamsTailWrapper      -> EPSILON | aParamsTail aParamsTailWrapper
 aParamsTail             -> , expr
 statementWrapper        -> EPSILON | statement statementWrapper
-assignStatAndVar        -> integer id genericExtension assignOp expr ; | float id genericExtension assignOp expr ; | id statOrVarExt assignOp expr ;
-statOrVarExt            -> id genericExtension ; | indiceWrapper indiceExtInt | ( aParams ) . variableIdnestWrapper | EPSILON
+assignStatAndVar        -> integer id genericExtension optionalAssignOp  | float id genericExtension optionalAssignOp | id statOrVarExt optionalAssignOp
+optionalAssignOp        -> assignOp expr ; | ;
+statOrVarExt            -> id genericExtension | indiceWrapper indiceExtInt | ( aParams ) . variableIdnestWrapper | EPSILON
 indiceExtInt            -> EPSILON | . variableIdnestWrapper
 statement               -> assignStatAndVar | if ( expr ) then statBlock else statBlock ; | for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; | read ( variableIdnestWrapper ) ; | write ( expr ) ; | return ( expr ) ;
 arraySizeWrapper        -> EPSILON | arraySize arraySizeWrapper
@@ -42,8 +43,8 @@ multOp                  -> * | / | and
 assignOp                -> =
 term                    -> factor termPrime
 termPrime               -> EPSILON | multOp factor termPrime
-variableAndfunctionCall -> id T2
-T2                      -> indice indiceWrapper T3 | ( aParams ) T3 | variableAndfunctionCall
+variableAndfunctionCall -> id T3 T2
+T2                      -> indice indiceWrapper T3 | ( aParams ) T3 | variableAndfunctionCall | EPSILON
 T3                      -> EPSILON | .
 sign                    -> + | -
 factor                  -> variableAndfunctionCall | intNum | floatNum | ( arithExpr ) | not factor | sign factor
