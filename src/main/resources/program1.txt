@@ -1,1 +1,13 @@
-::
+class Compiler {
+    integer tested;
+    integer test();
+};
+
+integer Compiler::test(integer t) {
+    this.tested = t;
+};
+
+main {
+    Compiler comp;
+    integer result = comp.test(12);
+};

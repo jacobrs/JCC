@@ -12,7 +12,7 @@ object Compiler {
 
     val programFiles = 3
 
-    for(i <- 2 to programFiles) {
+    for(i <- 1 to programFiles) {
 
       System.out.println(s"Compiling program$i.txt")
 
