@@ -2,36 +2,82 @@
     classDeclWrapper
       classDecl
         class
-        Compiler
+        CompilerStarter
         optionalIDExt
           EPSILON
         {
         genericDeclWrapper
           genericDecl
             type
-              integer
-            tested
+              float
+            loadTime
             genericExtension
               arraySizeWrapper
                 EPSILON
             ;
           genericDeclWrapper
-            genericDecl
-              type
-                integer
-              test
-              genericExtension
-                (
-                fParams
-                  EPSILON
-                )
-              ;
-            genericDeclWrapper
-              EPSILON
+            EPSILON
         }
         ;
       classDeclWrapper
-        EPSILON
+        classDecl
+          class
+          CompilerPackage
+          optionalIDExt
+            :
+            CompilerStarter
+            idWrapper
+              EPSILON
+          {
+          genericDeclWrapper
+            genericDecl
+              type
+                float
+              computationTime
+              genericExtension
+                arraySizeWrapper
+                  EPSILON
+              ;
+            genericDeclWrapper
+              EPSILON
+          }
+          ;
+        classDeclWrapper
+          classDecl
+            class
+            Compiler
+            optionalIDExt
+              :
+              CompilerPackage
+              idWrapper
+                EPSILON
+            {
+            genericDeclWrapper
+              genericDecl
+                type
+                  integer
+                tested
+                genericExtension
+                  arraySizeWrapper
+                    EPSILON
+                ;
+              genericDeclWrapper
+                genericDecl
+                  type
+                    integer
+                  test
+                  genericExtension
+                    (
+                    fParams
+                      EPSILON
+                    )
+                  ;
+                genericDeclWrapper
+                  EPSILON
+            }
+            ;
+          classDeclWrapper
+            EPSILON
     funcDefWrapper
       funcDef
         funcHead

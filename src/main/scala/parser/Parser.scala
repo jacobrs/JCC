@@ -64,7 +64,6 @@ object Parser {
     var error = false
     if(classDeclWrapper(parent) && funcDefWrapper(parent) && m(RESERVED("main"), parent)
       && funcBody(parent) && m(PUNCTUATION(";"), parent) && m(TERMINATION(""), parent)) {
-      println("prog -> classDeclWrapper funcDefWrapper main funcBody ;")
       error = true
     }
     !error
@@ -76,12 +75,10 @@ object Parser {
     lookahead match {
       case RESERVED("class") =>
         if (classDecl(root) && classDeclWrapper(root)) {
-          println("classDeclWrapper -> classDecl classDeclWrapper")
         } else {
           error = true
         }
       case RESERVED("float") | RESERVED("integer") | ID(_) | RESERVED("main") =>
-        println("classDeclWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -97,7 +94,6 @@ object Parser {
       case RESERVED("class") =>
         if (m(RESERVED("class"), root) && m(ID(""), root) && optionalIDExt(root) && m(PUNCTUATION("{"), root)
           && genericDeclWrapper(root) && m(PUNCTUATION("}"), root) && m(PUNCTUATION(";"), root)){
-          println("classDecl -> class id optionalIDExt { genericDeclWrapper } ;")
         } else {
           error = true
         }
@@ -114,12 +110,10 @@ object Parser {
     lookahead match {
       case RESERVED("float") | RESERVED("integer") | ID(_) =>
         if (funcDef(root) && funcDefWrapper(root)) {
-          println("funcDefWrapper -> funcDef funcDefWrapper")
         } else {
           error = true
         }
       case RESERVED("main") =>
-        println("funcDefWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -134,7 +128,6 @@ object Parser {
     lookahead match {
       case RESERVED("float") | RESERVED("integer") | ID(_) =>
         if (funcHead(root) && funcBody(root) && m(PUNCTUATION(";"), root)) {
-          println("funcDef -> funcHead funcBody")
         } else {
           error = true
         }
@@ -151,7 +144,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("{") =>
         if (m(PUNCTUATION("{"), root) && statementWrapper(root) && m(PUNCTUATION("}"), root)) {
-          println("funcBody -> { statementWrapper }")
         } else {
           error = true
         }
@@ -168,12 +160,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION(":") =>
         if (m(PUNCTUATION(":"), root) && m(ID(""), root) && idWrapper(root)) {
-          println("optionalIDExt -> : id idWrapper")
         } else {
           error = true
         }
       case PUNCTUATION("{") =>
-        println("optionalIDExt -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -188,12 +178,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION(",") =>
         if (idEntity(root) && idWrapper(root)) {
-          println("idWrapper -> idEntity idWrapper")
         } else {
           error = true
         }
       case PUNCTUATION("{") =>
-        println("idWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -208,7 +196,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION(",") =>
         if (m(PUNCTUATION(","), root) && m(ID(""), root)) {
-          println("idEntity -> , id")
         } else {
           error = true
         }
@@ -225,12 +212,10 @@ object Parser {
     lookahead match {
       case RESERVED("integer") | ID(_) | RESERVED("float") =>
         if (genericDecl(root) && genericDeclWrapper(root)) {
-          println("genericDeclWrapper -> genericDecl genericDeclWrapper")
         } else {
           error = true
         }
       case PUNCTUATION("}") =>
-        println("genericDeclWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -245,7 +230,6 @@ object Parser {
     lookahead match {
       case RESERVED("integer") | ID(_) | RESERVED("float") =>
         if (`type`(root) && m(ID(""), root) && genericExtension(root) && m(PUNCTUATION(";"), root)) {
-          println("genericDecl -> type id genericExtension ;")
         } else {
           error = true
         }
@@ -262,13 +246,11 @@ object Parser {
     lookahead match {
       case PUNCTUATION("(") =>
         if (m(PUNCTUATION("("), root) && fParams(root) && m(PUNCTUATION(")"), root)) {
-          println("genericExtension -> ( fParams )")
         } else {
           error = true
         }
       case PUNCTUATION(";") | PUNCTUATION("=") | PUNCTUATION("[") =>
         if (arraySizeWrapper(root)) {
-          println("genericExtension -> arraySizeWrapper")
         } else {
           error = true
         }
@@ -286,7 +268,6 @@ object Parser {
       case RESERVED("float") | RESERVED("integer") | ID(_) =>
         if (`type`(root) && optionalIDSR(root) && m(PUNCTUATION("("), root)
             && fParams(root) && m(PUNCTUATION(")"), root)) {
-          println("funcHead -> type optionalIDSR ( fParams )")
         } else {
           error = true
         }
@@ -303,7 +284,6 @@ object Parser {
     lookahead match {
       case ID(_) =>
         if (m(ID(""), root) && optionalIDSRExt(root)) {
-          println("optionalIDSR -> id optionalIDSRExt")
         } else {
           error = true
         }
@@ -320,12 +300,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION("::") =>
         if (m(PUNCTUATION("::"), root) && m(ID(""), root)) {
-          println("optionalIDSRExt -> :: id")
         } else {
           error = true
         }
       case PUNCTUATION("(") =>
-        println("optionalIDSRExt -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -340,19 +318,16 @@ object Parser {
     lookahead match {
       case RESERVED("float") =>
         if (m(RESERVED("float"), root)) {
-          println("type -> float")
         } else {
           error = true
         }
       case RESERVED("integer") =>
         if (m(RESERVED("integer"), root)) {
-          println("type -> integer")
         } else {
           error = true
         }
       case ID(_) =>
         if (m(ID(""), root)) {
-          println("type -> id")
         } else {
           error = true
         }
@@ -369,12 +344,10 @@ object Parser {
     lookahead match {
       case RESERVED("float") | ID(_) | RESERVED("integer") =>
         if (`type`(root) && m(ID(""), root) && arraySizeWrapper(root) && fParamsTailWrapper(root)) {
-          println("fParams -> type id arraySizeWrapper fParamsTailWrapper")
         } else {
           error = true
         }
       case PUNCTUATION(")") =>
-        println("fParams -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -389,12 +362,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION(",") =>
         if (fParamsTail(root) && fParamsTailWrapper(root)) {
-          println("fParamsTailWrapper -> fParamsTail fParamsTailWrapper")
         } else {
           error = true
         }
       case PUNCTUATION(")") =>
-        println("fParamsTailWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -409,7 +380,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION(",") =>
         if (m(PUNCTUATION(","), root) && `type`(root) && m(ID(""), root) && arraySizeWrapper(root)) {
-          println("fParamsTail -> , type id arraySizeWrapper")
         } else {
           error = true
         }
@@ -426,12 +396,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION("(") | FLOAT(_) | ID(_) | INTEGER(_) | OPERATOR("!") =>
         if (expr(root) && aParamsTailWrapper(root)) {
-          println("aParams -> expr aParamsTailWrapper")
         } else {
           error = true
         }
       case PUNCTUATION(")") =>
-        println("aParams -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -446,12 +414,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION(",") =>
         if (aParamsTail(root) && aParamsTailWrapper(root)) {
-          println("aParamsTailWrapper -> aParamsTail aParamsTailWrapper")
         } else {
           error = true
         }
       case PUNCTUATION(")") =>
-        println("aParamsTailWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -466,7 +432,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION(",") =>
         if (m(PUNCTUATION(","), root) && expr(root)) {
-          println("aParamsTail -> , expr")
         } else {
           error = true
         }
@@ -484,12 +449,10 @@ object Parser {
       case RESERVED("float") | RESERVED("for") | RESERVED("if") | RESERVED("read")
         | RESERVED("return") | RESERVED("write") | RESERVED("integer") | ID(_) =>
         if (statement(root) && statementWrapper(root)) {
-          println("statementWrapper -> statement statementWrapper")
         } else {
           error = true
         }
       case PUNCTUATION("}") =>
-        println("statementWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -504,19 +467,16 @@ object Parser {
     lookahead match {
       case RESERVED("integer") =>
         if (m(RESERVED("integer"), root) && m(ID(""), root) && genericExtension(root) && optionalAssignOp(root)) {
-          println("assignStatAndVar -> integer id genericExtension assignOp expr ;")
         } else {
           error = true
         }
       case RESERVED("float") =>
         if (m(RESERVED("float"), root) && m(ID(""), root) && genericExtension(root) && optionalAssignOp(root)) {
-          println("assignStatAndVar -> float id genericExtension assignOp expr ;")
         } else {
           error = true
         }
       case ID(_) =>
         if (m(ID(""), root) && statOrVarExt(root) && optionalAssignOp(root)) {
-          println("assignStatAndVar -> id statOrVarExt assignOp expr ;")
         } else {
           error = true
         }
@@ -533,13 +493,11 @@ object Parser {
     lookahead match {
       case PUNCTUATION("=") =>
         if (assignOp(root) && expr(root) && m(PUNCTUATION(";"), root)) {
-          println("optionalAssignOp -> assignOp expr ;")
         } else {
           error = true
         }
       case PUNCTUATION(";") =>
         if (m(PUNCTUATION(";"), root)) {
-          println("optionalAssignOp -> ;")
         } else {
           error = true
         }
@@ -556,25 +514,21 @@ object Parser {
     lookahead match {
       case PUNCTUATION(".") | PUNCTUATION("[") =>
         if (indiceWrapper(root) && indiceExtInt(root)) {
-          println("statOrVarExt -> indiceWrapper indiceExtInt")
         } else {
           error = true
         }
       case PUNCTUATION("(") =>
         if (m(PUNCTUATION("("), root) && aParams(root) && m(PUNCTUATION(")"), root) &&
           m(PUNCTUATION("."), root) && variableIdnestWrapper(root)) {
-          println("statOrVarExt -> ( aParams ) . variableIdnestWrapper")
         } else {
           error = true
         }
       case ID(_) =>
         if (m(ID(""), root) && genericExtension(root)) {
-          println("statOrVarExt -> id genericExtension ;")
         } else {
           error = true
         }
       case PUNCTUATION("=") | PUNCTUATION(";") =>
-        println("statOrVarExt -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -589,12 +543,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION(".") =>
         if (m(PUNCTUATION("."), root) && variableIdnestWrapper(root)) {
-          println("indiceExtInt -> . variableIdnestWrapper")
         } else {
           error = true
         }
       case PUNCTUATION("}") | PUNCTUATION("=") =>
-        println("indiceExtInt -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -609,7 +561,6 @@ object Parser {
     lookahead match {
       case RESERVED("float") | ID(_) | RESERVED("integer") =>
         if (assignStatAndVar(root)) {
-          println("statement -> assignStatAndVar")
         } else {
           error = true
         }
@@ -617,7 +568,6 @@ object Parser {
         if(m(RESERVED("if"), root) && m(PUNCTUATION("("), root) && expr(root) && m(PUNCTUATION(")"), root)
           && m(RESERVED("then"), root) && statBlock(root) && m(RESERVED("else"), root) && statBlock(root)
           && m(PUNCTUATION(";"), root)) {
-          println("statement -> if ( expr ) then statBlock else statBlock ;")
         } else {
           error = true
         }
@@ -625,28 +575,24 @@ object Parser {
         if(m(RESERVED("for"), root) && m(PUNCTUATION("("), root) && `type`(root) && m(ID(""), root) &&
           assignOp(root) && expr(root) && m(PUNCTUATION(";"), root) && relExpr(root) && m(PUNCTUATION(";"), root)
           && assignStat(root) && m(PUNCTUATION(")"), root) && statBlock(root) && m(PUNCTUATION(";"), root)){
-          println("statement -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ;")
         } else {
           error = true
         }
       case RESERVED("read") =>
         if(m(RESERVED("read"), root) && m(PUNCTUATION("("), root) && variableIdnestWrapper(root)
           && m(PUNCTUATION(")"), root) && m(PUNCTUATION(";"), root)) {
-          println("statement -> read ( variable ) ;")
         } else {
           error = true
         }
       case RESERVED("write") =>
         if(m(RESERVED("write"), root) && m(PUNCTUATION("("), root) && variableIdnestWrapper(root)
           && m(PUNCTUATION(")"), root) && m(PUNCTUATION(";"), root)) {
-          println("statement -> write ( variable ) ;")
         } else {
           error = true
         }
       case RESERVED("return") =>
         if(m(RESERVED("return"), root) && m(PUNCTUATION("("), root) && variableIdnestWrapper(root)
           && m(PUNCTUATION(")"), root) && m(PUNCTUATION(";"), root)) {
-          println("statement -> return ( variable ) ;")
         } else {
           error = true
         }
@@ -663,12 +609,10 @@ object Parser {
     lookahead match {
       case PUNCTUATION("[") =>
         if (arraySize(root) && arraySizeWrapper(root)) {
-          println("arraySizeWrapper -> arraySize arraySizeWrapper")
         } else {
           error = true
         }
       case PUNCTUATION(")") | PUNCTUATION(",") | PUNCTUATION(";") | PUNCTUATION("=") =>
-        println("arraySizeWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -683,7 +627,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("[") =>
         if (m(PUNCTUATION("["), root) && m(INTEGER(""), root) && m(PUNCTUATION("]"), root)) {
-          println("arraySize -> [ intNum ]")
         } else {
           error = true
         }
@@ -700,7 +643,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("=") | ID(_) =>
         if (variableIdnestWrapper(root) && assignOp(root) && expr(root)) {
-          println("assignStat -> variable assignOp expr")
         } else {
           error = true
         }
@@ -717,7 +659,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("(") | OPERATOR("+") | OPERATOR("-") | OPERATOR("!") | FLOAT(_) | INTEGER(_) | ID(_) =>
         if (arithExpr(root) && exprExt(root)) {
-          println("expr -> arithExpr exprExt")
         } else {
           error = true
         }
@@ -735,18 +676,15 @@ object Parser {
       case PUNCTUATION("=") | PUNCTUATION(">") | PUNCTUATION(">=") |
            PUNCTUATION("<=") | PUNCTUATION("<") | PUNCTUATION("<>") =>
         if (relOp(root) && arithExpr(root)) {
-          println("exprExt -> relOp arithExpr")
         } else {
           error = true
         }
       case PUNCTUATION("(") | FLOAT(_) | INTEGER(_) | OPERATOR("!") =>
         if (term(root)) {
-          println("exprExt -> term")
         } else {
           error = true
         }
       case PUNCTUATION(",") | PUNCTUATION(")") | PUNCTUATION(";") =>
-          println("exprExt -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -761,7 +699,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("{") =>
         if (m(PUNCTUATION("{"), root) && statementWrapper(root) && m(PUNCTUATION("}"), root)) {
-          println("statBlock -> { statementWrapper }")
         } else {
           error = true
         }
@@ -769,12 +706,10 @@ object Parser {
            | RESERVED("return") | RESERVED("write") | RESERVED("integer") | ID(_)
            | PUNCTUATION("{") =>
         if (statement(root)) {
-          println("statBlock -> statement")
         } else {
           error = true
         }
       case PUNCTUATION(";") | RESERVED("else") =>
-        println("statBlock -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -789,7 +724,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("(") | FLOAT(_) | INTEGER(_) | OPERATOR("!") | ID(_) =>
         if (arithExpr(root) && relOp(root) && arithExpr(root)) {
-          println("relExpr -> arithExpr relOp arithExpr")
         } else {
           error = true
         }
@@ -806,7 +740,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("(") | FLOAT(_) | INTEGER(_) | OPERATOR("!") | ID(_) =>
         if (term(root) && arithExprPrime(root)) {
-          println("arithExpr -> term arithExprPrime")
         } else {
           error = true
         }
@@ -823,7 +756,6 @@ object Parser {
     lookahead match {
       case OPERATOR("+") | OPERATOR("-") | OPERATOR("||") =>
         if (addOp(root) && term(root) && arithExprPrime(root)) {
-          println("arithExprPrime -> addOp term arithExprPrime")
         } else {
           error = true
         }
@@ -831,7 +763,6 @@ object Parser {
           PUNCTUATION("]") | PUNCTUATION("=") | FLOAT(_) | INTEGER(_) | PUNCTUATION(">=") |
           PUNCTUATION("<=") | PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") |
           OPERATOR("!") =>
-        println("arithExprPrime -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -846,12 +777,10 @@ object Parser {
     lookahead match {
       case ID(_) =>
         if(variableIdnest(root) && variableIdnestWrapper(root)){
-          println("variableIdnestWrapper -> variableIdnest variableIdnestWrapper")
         } else {
           error = true
         }
       case PUNCTUATION(")") | PUNCTUATION("=") =>
-        println("variableIdnestWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -866,7 +795,6 @@ object Parser {
     lookahead match {
       case ID(_) =>
         if(m(ID(""), root) && indiceWrapper(root)){
-          println("variableIdnest -> id indiceWrapper")
         } else {
           error = true
         }
@@ -883,37 +811,31 @@ object Parser {
     lookahead match {
       case PUNCTUATION("==") =>
         if(m(PUNCTUATION("=="), root)){
-          println("relOp -> eq")
         } else {
           error = true
         }
       case PUNCTUATION("<>") =>
         if(m(PUNCTUATION("<>"), root)){
-          println("relOp -> neq")
         } else {
           error = true
         }
       case PUNCTUATION("<") =>
         if(m(PUNCTUATION("<"), root)){
-          println("relOp -> lt")
         } else {
           error = true
         }
       case PUNCTUATION(">") =>
         if(m(PUNCTUATION(">"), root)){
-          println("relOp -> gt")
         } else {
           error = true
         }
       case PUNCTUATION("<=") =>
         if(m(PUNCTUATION("<="), root)){
-          println("relOp -> leq")
         } else {
           error = true
         }
       case PUNCTUATION(">=") =>
         if(m(PUNCTUATION(">="), root)){
-          println("relOp -> geq")
         } else {
           error = true
         }
@@ -930,19 +852,16 @@ object Parser {
     lookahead match {
       case OPERATOR("+") =>
         if (m(OPERATOR("+"), root)) {
-          println("addOp -> +")
         } else {
           error = true
         }
       case OPERATOR("-") =>
         if (m(OPERATOR("-"), root)) {
-          println("addOp -> -")
         } else {
           error = true
         }
       case OPERATOR("||") =>
         if (m(OPERATOR("||"), root)) {
-          println("addOp -> or")
         } else {
           error = true
         }
@@ -959,19 +878,16 @@ object Parser {
     lookahead match {
       case OPERATOR("*") =>
         if (m(OPERATOR("*"), root)) {
-          println("multOp -> *")
         } else {
           error = true
         }
       case OPERATOR("/") =>
         if (m(OPERATOR("/"), root)) {
-          println("multOp -> /")
         } else {
           error = true
         }
       case OPERATOR("&&") =>
         if (m(OPERATOR("&&"), root)) {
-          println("multOp -> and")
         } else {
           error = true
         }
@@ -988,7 +904,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("=") =>
         if (m(PUNCTUATION("="), root)) {
-          println("assignOp -> =")
         } else {
           error = true
         }
@@ -1005,7 +920,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("(") | FLOAT(_) | ID(_) | INTEGER(_) | OPERATOR("!") =>
         if (factor(root) && termPrime(root)) {
-          println("term -> factor termPrime")
         } else {
           error = true
         }
@@ -1022,7 +936,6 @@ object Parser {
     lookahead match {
       case OPERATOR("*") | OPERATOR("/") | OPERATOR("&&") =>
         if (multOp(root) && factor(root) && termPrime(root)) {
-          println("termPrime -> multOp factor termPrime")
         } else {
           error = true
         }
@@ -1030,7 +943,6 @@ object Parser {
            PUNCTUATION(";") | OPERATOR("-") | PUNCTUATION("]") | PUNCTUATION("=") | FLOAT(_) |
            INTEGER(_) | PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") |
            PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") | OPERATOR("!") =>
-        println("termPrime -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -1045,7 +957,6 @@ object Parser {
     lookahead match {
       case ID(_) =>
         if (m(ID(""), root) && T3(root) && T2(root)) {
-          println("variableAndFunctionCall -> id T2")
         } else {
           error = true
         }
@@ -1060,19 +971,16 @@ object Parser {
     lookahead match {
       case PUNCTUATION("[") =>
         if (indice(root) && indiceWrapper(root) && T3(root)) {
-          println("T2 -> indice indiceWrapper T3")
         } else {
           error = true
         }
       case PUNCTUATION("(") =>
         if (m(PUNCTUATION("("), root) && aParams(root) && m(PUNCTUATION(")"), root) && T3(root)) {
-          println("T2 -> ( aParams ) T3")
         } else {
           error = true
         }
       case ID(_) =>
         if (variableAndFunctionCall(root)) {
-          println("T2 -> variableAndfunctionCall")
         } else {
           error = true
         }
@@ -1080,7 +988,6 @@ object Parser {
            OPERATOR("/") | PUNCTUATION(";") | PUNCTUATION("]") | OPERATOR("&&") | PUNCTUATION("==") |
            PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") | PUNCTUATION("<") |
            PUNCTUATION(">") | PUNCTUATION("<>") =>
-        println("T2 -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -1095,7 +1002,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION(".") =>
         if (m(PUNCTUATION("."), root)) {
-          println("T3 -> .")
         } else {
           error = true
         }
@@ -1104,7 +1010,6 @@ object Parser {
            PUNCTUATION("=") | OPERATOR("&&") | OPERATOR("/") |
            PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") |
            PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") =>
-        println("T3 -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -1119,13 +1024,11 @@ object Parser {
     lookahead match {
       case OPERATOR("+") =>
         if (m(OPERATOR("+"), root)) {
-          println("sign -> +")
         } else {
           error = true
         }
       case OPERATOR("-") =>
         if (m(OPERATOR("-"), root)) {
-          println("sign -> -")
         } else {
           error = true
         }
@@ -1142,37 +1045,31 @@ object Parser {
     lookahead match {
       case ID(_) =>
         if (variableAndFunctionCall(root)) {
-          println("factor -> variableAndfunctionCall")
         } else {
           error = true
         }
       case INTEGER(_) =>
         if (m(INTEGER(""), root)) {
-          println("factor -> intNum")
         } else {
           error = true
         }
       case FLOAT(_) =>
         if (m(FLOAT(""), root)) {
-          println("factor -> floatNum")
         } else {
           error = true
         }
       case PUNCTUATION("(") =>
         if (m(PUNCTUATION("("), root) && arithExpr(root) && m(PUNCTUATION(")"), root)) {
-          println("factor -> ( arithExpr )")
         } else {
           error = true
         }
       case OPERATOR("!") =>
         if (m(OPERATOR("!"), root) && factor(root)) {
-          println("factor -> not factor")
         } else {
           error = true
         }
       case OPERATOR("+") | OPERATOR("-") =>
         if (sign(root) && factor(root)) {
-          println("factor -> sign factor")
         } else {
           error = true
         }
@@ -1189,12 +1086,10 @@ object Parser {
     lookahead match {
       case ID(_) =>
         if (idnest(root) && idnestWrapper(root)) {
-          println("idnestWrapper -> idnest idnestWrapper")
         } else {
           error = true
         }
       case _ =>
-        println("idnestWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
     }
     parent.addChild(root)
@@ -1207,7 +1102,6 @@ object Parser {
     lookahead match {
       case ID(_) =>
         if (m(ID(""), root) && idnestExt(root)) {
-          println("idnest -> id idnestExt")
         } else {
           error = true
         }
@@ -1224,13 +1118,11 @@ object Parser {
     lookahead match {
       case PUNCTUATION(".") | PUNCTUATION("[") =>
         if (indiceWrapper(root) && m(PUNCTUATION("."), root)) {
-          println("idnestExt -> indiceWrapper .")
         } else {
           error = true
         }
       case PUNCTUATION("(") =>
         if (m(PUNCTUATION("("), root) && aParams(root) && m(PUNCTUATION(")"), root) && m(PUNCTUATION("."), root)) {
-          println("idnestExt -> ( aParams ) .")
         } else {
           error = true
         }
@@ -1247,7 +1139,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("[") =>
         if (indice(root) && indiceWrapper(root)) {
-          println("indiceWrapper -> indice indiceWrapper")
         } else {
           error = true
         }
@@ -1256,7 +1147,6 @@ object Parser {
            PUNCTUATION("=") | FLOAT(_) | OPERATOR("&&") | PUNCTUATION(".") |
            INTEGER(_) | PUNCTUATION(">=") | OPERATOR("||") | PUNCTUATION("<=") |
            PUNCTUATION("<") | PUNCTUATION(">") | ID(_) | PUNCTUATION("<>") | OPERATOR("!") =>
-        println("indiceWrapper -> EPSILON")
         root.addChild(new ASTNode("EPSILON"))
       case _ =>
         error = true
@@ -1271,7 +1161,6 @@ object Parser {
     lookahead match {
       case PUNCTUATION("[") =>
         if (m(PUNCTUATION("["), root) && arithExpr(root) && m(PUNCTUATION("]"), root)) {
-          println("indiceWrapper -> [ arithExpr ]")
         } else {
           error = true
         }

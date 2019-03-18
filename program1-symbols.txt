@@ -1,0 +1,43 @@
++------------------
+| global
++------------------
+| CompilerStarter | class | 
+| CompilerPackage | class | 
+| Compiler | class | 
+| main | function | void
++------------------
+
++------------------
+| CompilerStarter
++------------------
+| loadTime | variable | float
++------------------
+
++------------------
+| CompilerPackage
++------------------
+| loadTime | variable | float
+| computationTime | variable | float
++------------------
+
++------------------
+| Compiler
++------------------
+| loadTime | variable | float
+| computationTime | variable | float
+| tested | variable | integer
+| test | function | integer
++------------------
+
++------------------
+| test
++------------------
+| t | parameter | integer
++------------------
+
++------------------
+| main
++------------------
+| result | variable | integer
++------------------
+

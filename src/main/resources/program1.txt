@@ -1,4 +1,12 @@
-class Compiler {
+class CompilerStarter {
+    float loadTime;
+};
+
+class CompilerPackage: CompilerStarter {
+    float computationTime;
+};
+
+class Compiler: CompilerPackage {
     integer tested;
     integer test();
 };

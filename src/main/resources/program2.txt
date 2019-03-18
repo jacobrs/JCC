@@ -1,6 +1,6 @@
 class InheritedUtility {
  integer member1;};
-class Utility : InheritedUtility {
+class Utility : InheritedUtility  {
  integer var1[4][5][7][8][9][1][0];
  float var2;
  integer findMax(integer array[100]);

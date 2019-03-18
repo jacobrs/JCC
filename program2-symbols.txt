@@ -1,0 +1,56 @@
++------------------
+| global
++------------------
+| InheritedUtility | class | 
+| Utility | class | 
+| randomize | function | float
+| main | function | void
++------------------
+
++------------------
+| InheritedUtility
++------------------
+| member1 | variable | integer
++------------------
+
++------------------
+| Utility
++------------------
+| member1 | variable | integer
+| var1 | variable | integer
+| var2 | variable | float
+| findMax | function | integer
+| findMin | function | integer
++------------------
+
++------------------
+| findMax
++------------------
+| array | parameter | integer
+| maxValue | variable | integer
+| idx | variable | integer
++------------------
+
++------------------
+| findMin
++------------------
+| array | parameter | integer
+| minValue | variable | integer
+| idx | variable | integer
++------------------
+
++------------------
+| randomize
++------------------
+| value | variable | float
++------------------
+
++------------------
+| main
++------------------
+| sample | variable | integer
+| idx | variable | integer
+| maxValue | variable | integer
+| minValue | variable | integer
++------------------
+
