@@ -1,11 +1,28 @@
 +------------------
 | global
 +------------------
+| Test | class | 
 | main | function | void
++------------------
+
++------------------
+| Test
++------------------
+| whatafloat | variable | float
+| thisisanarray | variable | integer
+| thisFunctionReturnsAnInteger | function | integer
++------------------
+
++------------------
+| thisFunctionReturnsAnInteger
++------------------
+| a | parameter | integer
+| b | parameter | type
 +------------------
 
 +------------------
 | main
 +------------------
+| id | variable | integer
 +------------------
 

@@ -3,10 +3,6 @@ package parser
 import tokenizer.Token
 import tokenizer.Token._
 
-class Parser {
-
-}
-
 object Parser {
 
   var lookahead: Token = OPERATOR("")
@@ -29,28 +25,35 @@ object Parser {
 
   private def m(t: Token, parent: ASTNode): Boolean = {
     var result = lookahead == t
+    var metadata: Option[String] = None
 
     t match {
       case ID(_) =>
         lookahead match {
-          case ID(_) => result = true
+          case ID(_) =>
+            metadata = Some("ID")
+            result = true
           case _ =>
         }
       case INTEGER(_) =>
         lookahead match {
-          case INTEGER(_) => result = true
+          case INTEGER(_) =>
+            metadata = Some("INTEGER")
+            result = true
           case _ =>
         }
       case FLOAT(_) =>
         lookahead match {
-          case FLOAT(_) => result = true
+          case FLOAT(_) =>
+            metadata = Some("FLOAT")
+            result = true
           case _ =>
         }
       case _ =>
     }
 
     if(result){
-      parent.addChild(new ASTNode(lookahead.value))
+      parent.addChild(new ASTNode(lookahead.value, metadata))
       if(tokenIterator.hasNext) {
         lookahead = tokenIterator.next()
       } else {
@@ -579,19 +582,19 @@ object Parser {
           error = true
         }
       case RESERVED("read") =>
-        if(m(RESERVED("read"), root) && m(PUNCTUATION("("), root) && variableIdnestWrapper(root)
+        if(m(RESERVED("read"), root) && m(PUNCTUATION("("), root) && expr(root)
           && m(PUNCTUATION(")"), root) && m(PUNCTUATION(";"), root)) {
         } else {
           error = true
         }
       case RESERVED("write") =>
-        if(m(RESERVED("write"), root) && m(PUNCTUATION("("), root) && variableIdnestWrapper(root)
+        if(m(RESERVED("write"), root) && m(PUNCTUATION("("), root) && expr(root)
           && m(PUNCTUATION(")"), root) && m(PUNCTUATION(";"), root)) {
         } else {
           error = true
         }
       case RESERVED("return") =>
-        if(m(RESERVED("return"), root) && m(PUNCTUATION("("), root) && variableIdnestWrapper(root)
+        if(m(RESERVED("return"), root) && m(PUNCTUATION("("), root) && expr(root)
           && m(PUNCTUATION(")"), root) && m(PUNCTUATION(";"), root)) {
         } else {
           error = true

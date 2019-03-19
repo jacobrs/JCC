@@ -1,6 +1,6 @@
 package parser
 
-class ASTNode(v: String) {
+class ASTNode(v: String, metadata: Option[String] = None) {
 
   val value: String = v
   var children: Seq[ASTNode] = Seq.empty
@@ -14,7 +14,7 @@ class ASTNode(v: String) {
     for (_ <- 0 to level){
       output += "  "
     }
-    output += value + "\n"
+    output += metadata.getOrElse("") + value + "\n"
     children.foreach(child => output += child.print(level+1))
     output
   }

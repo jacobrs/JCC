@@ -1,22 +1,13 @@
-main{
-    id = 1.23 + ((1.23  * 1.23 ) - 1.23 ) + 1.23;
+class Test {
+    float whatafloat;
+    integer thisisanarray[10];
+    integer thisFunctionReturnsAnInteger(integer a, float b);
 };
 
-/*
+integer Test::thisFunctionReturnsAnInteger(integer a, float b) {
+   write(a + b);
+};
 
-0.01
-0.100
-1.1e9
-1.1e+876
-1.9e-997
-
-/* float operations $test
-
-test = 2
-_WhatIsLove = 2
-
-main {
-    integer float this = 3.124e-123
-    invalidFloat = 324+425e
-    read write *&#(
-}*/
+main{
+    integer id = 1.23 + ((1.23  * 1.23 ) - 1.23 ) + 1.23;
+};

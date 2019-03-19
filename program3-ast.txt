@@ -1,17 +1,147 @@
   prog
     classDeclWrapper
-      EPSILON
+      classDecl
+        class
+        IDENTIFIERTest
+        optionalIDExt
+          EPSILON
+        {
+        genericDeclWrapper
+          genericDecl
+            type
+              float
+            IDENTIFIERwhatafloat
+            genericExtension
+              arraySizeWrapper
+                EPSILON
+            ;
+          genericDeclWrapper
+            genericDecl
+              type
+                integer
+              IDENTIFIERthisisanarray
+              genericExtension
+                arraySizeWrapper
+                  arraySize
+                    [
+                    INTEGER10
+                    ]
+                  arraySizeWrapper
+                    EPSILON
+              ;
+            genericDeclWrapper
+              genericDecl
+                type
+                  integer
+                IDENTIFIERthisFunctionReturnsAnInteger
+                genericExtension
+                  (
+                  fParams
+                    type
+                      integer
+                    IDENTIFIERa
+                    arraySizeWrapper
+                      EPSILON
+                    fParamsTailWrapper
+                      fParamsTail
+                        ,
+                        type
+                          float
+                        IDENTIFIERb
+                        arraySizeWrapper
+                          EPSILON
+                      fParamsTailWrapper
+                        EPSILON
+                  )
+                ;
+              genericDeclWrapper
+                EPSILON
+        }
+        ;
+      classDeclWrapper
+        EPSILON
     funcDefWrapper
-      EPSILON
+      funcDef
+        funcHead
+          type
+            integer
+          optionalIDSR
+            IDENTIFIERTest
+            optionalIDSRExt
+              ::
+              IDENTIFIERthisFunctionReturnsAnInteger
+          (
+          fParams
+            type
+              integer
+            IDENTIFIERa
+            arraySizeWrapper
+              EPSILON
+            fParamsTailWrapper
+              fParamsTail
+                ,
+                type
+                  float
+                IDENTIFIERb
+                arraySizeWrapper
+                  EPSILON
+              fParamsTailWrapper
+                EPSILON
+          )
+        funcBody
+          {
+          statementWrapper
+            statement
+              write
+              (
+              expr
+                arithExpr
+                  term
+                    factor
+                      variableAndFunctionCall
+                        IDENTIFIERa
+                        T3
+                          EPSILON
+                        T2
+                          EPSILON
+                    termPrime
+                      EPSILON
+                  arithExprPrime
+                    addOp
+                      +
+                    term
+                      factor
+                        variableAndFunctionCall
+                          IDENTIFIERb
+                          T3
+                            EPSILON
+                          T2
+                            EPSILON
+                      termPrime
+                        EPSILON
+                    arithExprPrime
+                      EPSILON
+                exprExt
+                  EPSILON
+              )
+              ;
+            statementWrapper
+              EPSILON
+          }
+        ;
+      funcDefWrapper
+        EPSILON
     main
     funcBody
       {
       statementWrapper
         statement
           assignStatAndVar
-            id
-            statOrVarExt
-              EPSILON
+            integer
+            IDENTIFIERid
+            genericExtension
+              arraySizeWrapper
+                EPSILON
             optionalAssignOp
               assignOp
                 =
@@ -19,7 +149,7 @@
                 arithExpr
                   term
                     factor
-                      1.23
+                      FLOAT1.23
                     termPrime
                       EPSILON
                   arithExprPrime
@@ -35,12 +165,12 @@
                               arithExpr
                                 term
                                   factor
-                                    1.23
+                                    FLOAT1.23
                                   termPrime
                                     multOp
                                       *
                                     factor
-                                      1.23
+                                      FLOAT1.23
                                     termPrime
                                       EPSILON
                                 arithExprPrime
@@ -53,7 +183,7 @@
                               -
                             term
                               factor
-                                1.23
+                                FLOAT1.23
                               termPrime
                                 EPSILON
                             arithExprPrime
@@ -66,7 +196,7 @@
                         +
                       term
                         factor
-                          1.23
+                          FLOAT1.23
                         termPrime
                           EPSILON
                       arithExprPrime
