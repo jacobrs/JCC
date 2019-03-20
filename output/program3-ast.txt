@@ -2,7 +2,7 @@
     classDeclWrapper
       classDecl
         class
-        IDENTIFIERTest
+        IDTest
         optionalIDExt
           EPSILON
         {
@@ -10,7 +10,7 @@
           genericDecl
             type
               float
-            IDENTIFIERwhatafloat
+            IDwhatafloat
             genericExtension
               arraySizeWrapper
                 EPSILON
@@ -19,7 +19,7 @@
             genericDecl
               type
                 integer
-              IDENTIFIERthisisanarray
+              IDthisisanarray
               genericExtension
                 arraySizeWrapper
                   arraySize
@@ -33,13 +33,13 @@
               genericDecl
                 type
                   integer
-                IDENTIFIERthisFunctionReturnsAnInteger
+                IDthisFunctionReturnsAnInteger
                 genericExtension
                   (
                   fParams
                     type
                       integer
-                    IDENTIFIERa
+                    IDa
                     arraySizeWrapper
                       EPSILON
                     fParamsTailWrapper
@@ -47,7 +47,7 @@
                         ,
                         type
                           float
-                        IDENTIFIERb
+                        IDb
                         arraySizeWrapper
                           EPSILON
                       fParamsTailWrapper
@@ -66,15 +66,15 @@
           type
             integer
           optionalIDSR
-            IDENTIFIERTest
+            IDTest
             optionalIDSRExt
               ::
-              IDENTIFIERthisFunctionReturnsAnInteger
+              IDthisFunctionReturnsAnInteger
           (
           fParams
             type
               integer
-            IDENTIFIERa
+            IDa
             arraySizeWrapper
               EPSILON
             fParamsTailWrapper
@@ -82,7 +82,7 @@
                 ,
                 type
                   float
-                IDENTIFIERb
+                IDb
                 arraySizeWrapper
                   EPSILON
               fParamsTailWrapper
@@ -99,7 +99,7 @@
                   term
                     factor
                       variableAndFunctionCall
-                        IDENTIFIERa
+                        IDa
                         T3
                           EPSILON
                         T2
@@ -112,7 +112,7 @@
                     term
                       factor
                         variableAndFunctionCall
-                          IDENTIFIERb
+                          IDb
                           T3
                             EPSILON
                           T2
@@ -138,7 +138,7 @@
         statement
           assignStatAndVar
             integer
-            IDENTIFIERid
+            IDid
             genericExtension
               arraySizeWrapper
                 EPSILON

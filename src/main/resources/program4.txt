@@ -1,0 +1,22 @@
+class CompilerStarter {
+    float loadTime;
+};
+
+class CompilerPackage: CompilerStarter {
+    float computationTime;
+    float loadTime;
+};
+
+class Compiler: CompilerPackage {
+    integer tested;
+    integer test();
+};
+
+integer Compiler::test(integer t) {
+    this.tested = t;
+};
+
+main {
+    Compiler comp;
+    integer result = comp.test(12);
+};

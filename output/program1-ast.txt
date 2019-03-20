@@ -2,7 +2,7 @@
     classDeclWrapper
       classDecl
         class
-        IDENTIFIERCompilerStarter
+        IDCompilerStarter
         optionalIDExt
           EPSILON
         {
@@ -10,7 +10,7 @@
           genericDecl
             type
               float
-            IDENTIFIERloadTime
+            IDloadTime
             genericExtension
               arraySizeWrapper
                 EPSILON
@@ -22,10 +22,10 @@
       classDeclWrapper
         classDecl
           class
-          IDENTIFIERCompilerPackage
+          IDCompilerPackage
           optionalIDExt
             :
-            IDENTIFIERCompilerStarter
+            IDCompilerStarter
             idWrapper
               EPSILON
           {
@@ -33,7 +33,7 @@
             genericDecl
               type
                 float
-              IDENTIFIERcomputationTime
+              IDcomputationTime
               genericExtension
                 arraySizeWrapper
                   EPSILON
@@ -45,10 +45,10 @@
         classDeclWrapper
           classDecl
             class
-            IDENTIFIERCompiler
+            IDCompiler
             optionalIDExt
               :
-              IDENTIFIERCompilerPackage
+              IDCompilerPackage
               idWrapper
                 EPSILON
             {
@@ -56,7 +56,7 @@
               genericDecl
                 type
                   integer
-                IDENTIFIERtested
+                IDtested
                 genericExtension
                   arraySizeWrapper
                     EPSILON
@@ -65,7 +65,7 @@
                 genericDecl
                   type
                     integer
-                  IDENTIFIERtest
+                  IDtest
                   genericExtension
                     (
                     fParams
@@ -84,15 +84,15 @@
           type
             integer
           optionalIDSR
-            IDENTIFIERCompiler
+            IDCompiler
             optionalIDSRExt
               ::
-              IDENTIFIERtest
+              IDtest
           (
           fParams
             type
               integer
-            IDENTIFIERt
+            IDt
             arraySizeWrapper
               EPSILON
             fParamsTailWrapper
@@ -103,7 +103,7 @@
           statementWrapper
             statement
               assignStatAndVar
-                IDENTIFIERthis
+                IDthis
                 statOrVarExt
                   indiceWrapper
                     EPSILON
@@ -111,7 +111,7 @@
                     .
                     variableIdnestWrapper
                       variableIdnest
-                        IDENTIFIERtested
+                        IDtested
                         indiceWrapper
                           EPSILON
                       variableIdnestWrapper
@@ -124,7 +124,7 @@
                       term
                         factor
                           variableAndFunctionCall
-                            IDENTIFIERt
+                            IDt
                             T3
                               EPSILON
                             T2
@@ -148,9 +148,9 @@
       statementWrapper
         statement
           assignStatAndVar
-            IDENTIFIERCompiler
+            IDCompiler
             statOrVarExt
-              IDENTIFIERcomp
+              IDcomp
               genericExtension
                 arraySizeWrapper
                   EPSILON
@@ -160,7 +160,7 @@
           statement
             assignStatAndVar
               integer
-              IDENTIFIERresult
+              IDresult
               genericExtension
                 arraySizeWrapper
                   EPSILON
@@ -172,12 +172,12 @@
                     term
                       factor
                         variableAndFunctionCall
-                          IDENTIFIERcomp
+                          IDcomp
                           T3
                             .
                           T2
                             variableAndFunctionCall
-                              IDENTIFIERtest
+                              IDtest
                               T3
                                 EPSILON
                               T2

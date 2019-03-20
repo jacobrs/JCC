@@ -2,7 +2,7 @@
     classDeclWrapper
       classDecl
         class
-        IDENTIFIERInheritedUtility
+        IDInheritedUtility
         optionalIDExt
           EPSILON
         {
@@ -10,7 +10,7 @@
           genericDecl
             type
               integer
-            IDENTIFIERmember1
+            IDmember1
             genericExtension
               arraySizeWrapper
                 EPSILON
@@ -22,10 +22,10 @@
       classDeclWrapper
         classDecl
           class
-          IDENTIFIERUtility
+          IDUtility
           optionalIDExt
             :
-            IDENTIFIERInheritedUtility
+            IDInheritedUtility
             idWrapper
               EPSILON
           {
@@ -33,7 +33,7 @@
             genericDecl
               type
                 integer
-              IDENTIFIERvar1
+              IDvar1
               genericExtension
                 arraySizeWrapper
                   arraySize
@@ -77,7 +77,7 @@
               genericDecl
                 type
                   float
-                IDENTIFIERvar2
+                IDvar2
                 genericExtension
                   arraySizeWrapper
                     EPSILON
@@ -86,13 +86,13 @@
                 genericDecl
                   type
                     integer
-                  IDENTIFIERfindMax
+                  IDfindMax
                   genericExtension
                     (
                     fParams
                       type
                         integer
-                      IDENTIFIERarray
+                      IDarray
                       arraySizeWrapper
                         arraySize
                           [
@@ -108,13 +108,13 @@
                   genericDecl
                     type
                       integer
-                    IDENTIFIERfindMin
+                    IDfindMin
                     genericExtension
                       (
                       fParams
                         type
                           integer
-                        IDENTIFIERarray
+                        IDarray
                         arraySizeWrapper
                           arraySize
                             [
@@ -138,15 +138,15 @@
           type
             integer
           optionalIDSR
-            IDENTIFIERUtility
+            IDUtility
             optionalIDSRExt
               ::
-              IDENTIFIERfindMax
+              IDfindMax
           (
           fParams
             type
               integer
-            IDENTIFIERarray
+            IDarray
             arraySizeWrapper
               arraySize
                 [
@@ -163,7 +163,7 @@
             statement
               assignStatAndVar
                 integer
-                IDENTIFIERmaxValue
+                IDmaxValue
                 genericExtension
                   arraySizeWrapper
                     EPSILON
@@ -173,7 +173,7 @@
               statement
                 assignStatAndVar
                   integer
-                  IDENTIFIERidx
+                  IDidx
                   genericExtension
                     arraySizeWrapper
                       EPSILON
@@ -182,7 +182,7 @@
               statementWrapper
                 statement
                   assignStatAndVar
-                    IDENTIFIERmaxValue
+                    IDmaxValue
                     statOrVarExt
                       EPSILON
                     optionalAssignOp
@@ -193,7 +193,7 @@
                           term
                             factor
                               variableAndFunctionCall
-                                IDENTIFIERarray
+                                IDarray
                                 T3
                                   EPSILON
                                 T2
@@ -225,7 +225,7 @@
                     (
                     type
                       integer
-                    IDENTIFIERidx
+                    IDidx
                     assignOp
                       =
                     expr
@@ -245,7 +245,7 @@
                         term
                           factor
                             variableAndFunctionCall
-                              IDENTIFIERidx
+                              IDidx
                               T3
                                 EPSILON
                               T2
@@ -268,7 +268,7 @@
                     assignStat
                       variableIdnestWrapper
                         variableIdnest
-                          IDENTIFIERidx
+                          IDidx
                           indiceWrapper
                             EPSILON
                         variableIdnestWrapper
@@ -280,7 +280,7 @@
                           term
                             factor
                               variableAndFunctionCall
-                                IDENTIFIERidx
+                                IDidx
                                 T3
                                   EPSILON
                                 T2
@@ -311,7 +311,7 @@
                               term
                                 factor
                                   variableAndFunctionCall
-                                    IDENTIFIERarray
+                                    IDarray
                                     T3
                                       EPSILON
                                     T2
@@ -321,7 +321,7 @@
                                           term
                                             factor
                                               variableAndFunctionCall
-                                                IDENTIFIERidx
+                                                IDidx
                                                 T3
                                                   EPSILON
                                                 T2
@@ -346,7 +346,7 @@
                                 term
                                   factor
                                     variableAndFunctionCall
-                                      IDENTIFIERmaxValue
+                                      IDmaxValue
                                       T3
                                         EPSILON
                                       T2
@@ -362,7 +362,7 @@
                             statementWrapper
                               statement
                                 assignStatAndVar
-                                  IDENTIFIERmaxValue
+                                  IDmaxValue
                                   statOrVarExt
                                     EPSILON
                                   optionalAssignOp
@@ -373,7 +373,7 @@
                                         term
                                           factor
                                             variableAndFunctionCall
-                                              IDENTIFIERarray
+                                              IDarray
                                               T3
                                                 EPSILON
                                               T2
@@ -383,7 +383,7 @@
                                                     term
                                                       factor
                                                         variableAndFunctionCall
-                                                          IDENTIFIERidx
+                                                          IDidx
                                                           T3
                                                             EPSILON
                                                           T2
@@ -427,7 +427,7 @@
                           term
                             factor
                               variableAndFunctionCall
-                                IDENTIFIERmaxValue
+                                IDmaxValue
                                 T3
                                   EPSILON
                                 T2
@@ -450,15 +450,15 @@
             type
               integer
             optionalIDSR
-              IDENTIFIERUtility
+              IDUtility
               optionalIDSRExt
                 ::
-                IDENTIFIERfindMin
+                IDfindMin
             (
             fParams
               type
                 integer
-              IDENTIFIERarray
+              IDarray
               arraySizeWrapper
                 arraySize
                   [
@@ -475,7 +475,7 @@
               statement
                 assignStatAndVar
                   integer
-                  IDENTIFIERminValue
+                  IDminValue
                   genericExtension
                     arraySizeWrapper
                       EPSILON
@@ -485,7 +485,7 @@
                 statement
                   assignStatAndVar
                     integer
-                    IDENTIFIERidx
+                    IDidx
                     genericExtension
                       arraySizeWrapper
                         EPSILON
@@ -494,7 +494,7 @@
                 statementWrapper
                   statement
                     assignStatAndVar
-                      IDENTIFIERminValue
+                      IDminValue
                       statOrVarExt
                         EPSILON
                       optionalAssignOp
@@ -505,7 +505,7 @@
                             term
                               factor
                                 variableAndFunctionCall
-                                  IDENTIFIERarray
+                                  IDarray
                                   T3
                                     EPSILON
                                   T2
@@ -537,7 +537,7 @@
                       (
                       type
                         integer
-                      IDENTIFIERidx
+                      IDidx
                       assignOp
                         =
                       expr
@@ -557,7 +557,7 @@
                           term
                             factor
                               variableAndFunctionCall
-                                IDENTIFIERidx
+                                IDidx
                                 T3
                                   EPSILON
                                 T2
@@ -580,7 +580,7 @@
                       assignStat
                         variableIdnestWrapper
                           variableIdnest
-                            IDENTIFIERidx
+                            IDidx
                             indiceWrapper
                               EPSILON
                           variableIdnestWrapper
@@ -596,7 +596,7 @@
                                   term
                                     factor
                                       variableAndFunctionCall
-                                        IDENTIFIERidx
+                                        IDidx
                                         T3
                                           EPSILON
                                         T2
@@ -632,7 +632,7 @@
                                 term
                                   factor
                                     variableAndFunctionCall
-                                      IDENTIFIERarray
+                                      IDarray
                                       T3
                                         EPSILON
                                       T2
@@ -642,7 +642,7 @@
                                             term
                                               factor
                                                 variableAndFunctionCall
-                                                  IDENTIFIERidx
+                                                  IDidx
                                                   T3
                                                     EPSILON
                                                   T2
@@ -667,7 +667,7 @@
                                   term
                                     factor
                                       variableAndFunctionCall
-                                        IDENTIFIERmaxValue
+                                        IDmaxValue
                                         T3
                                           EPSILON
                                         T2
@@ -693,7 +693,7 @@
                                       term
                                         factor
                                           variableAndFunctionCall
-                                            IDENTIFIERidx
+                                            IDidx
                                             T3
                                               EPSILON
                                             T2
@@ -709,7 +709,7 @@
                               statementWrapper
                                 statement
                                   assignStatAndVar
-                                    IDENTIFIERmaxValue
+                                    IDmaxValue
                                     statOrVarExt
                                       EPSILON
                                     optionalAssignOp
@@ -720,7 +720,7 @@
                                           term
                                             factor
                                               variableAndFunctionCall
-                                                IDENTIFIERarray
+                                                IDarray
                                                 T3
                                                   EPSILON
                                                 T2
@@ -730,7 +730,7 @@
                                                       term
                                                         factor
                                                           variableAndFunctionCall
-                                                            IDENTIFIERidx
+                                                            IDidx
                                                             T3
                                                               EPSILON
                                                             T2
@@ -774,7 +774,7 @@
                             term
                               factor
                                 variableAndFunctionCall
-                                  IDENTIFIERminValue
+                                  IDminValue
                                   T3
                                     EPSILON
                                   T2
@@ -797,7 +797,7 @@
               type
                 float
               optionalIDSR
-                IDENTIFIERrandomize
+                IDrandomize
                 optionalIDSRExt
                   EPSILON
               (
@@ -810,7 +810,7 @@
                 statement
                   assignStatAndVar
                     float
-                    IDENTIFIERvalue
+                    IDvalue
                     genericExtension
                       arraySizeWrapper
                         EPSILON
@@ -819,7 +819,7 @@
                 statementWrapper
                   statement
                     assignStatAndVar
-                      IDENTIFIERvalue
+                      IDvalue
                       statOrVarExt
                         EPSILON
                       optionalAssignOp
@@ -867,7 +867,7 @@
                   statementWrapper
                     statement
                       assignStatAndVar
-                        IDENTIFIERvalue
+                        IDvalue
                         statOrVarExt
                           EPSILON
                         optionalAssignOp
@@ -960,7 +960,7 @@
                             term
                               factor
                                 variableAndFunctionCall
-                                  IDENTIFIERvalue
+                                  IDvalue
                                   T3
                                     EPSILON
                                   T2
@@ -986,7 +986,7 @@
         statement
           assignStatAndVar
             integer
-            IDENTIFIERsample
+            IDsample
             genericExtension
               arraySizeWrapper
                 arraySize
@@ -1001,7 +1001,7 @@
           statement
             assignStatAndVar
               integer
-              IDENTIFIERidx
+              IDidx
               genericExtension
                 arraySizeWrapper
                   EPSILON
@@ -1011,7 +1011,7 @@
             statement
               assignStatAndVar
                 integer
-                IDENTIFIERmaxValue
+                IDmaxValue
                 genericExtension
                   arraySizeWrapper
                     EPSILON
@@ -1021,7 +1021,7 @@
               statement
                 assignStatAndVar
                   integer
-                  IDENTIFIERminValue
+                  IDminValue
                   genericExtension
                     arraySizeWrapper
                       EPSILON
@@ -1030,9 +1030,9 @@
               statementWrapper
                 statement
                   assignStatAndVar
-                    IDENTIFIERUtility
+                    IDUtility
                     statOrVarExt
-                      IDENTIFIERutility
+                      IDutility
                       genericExtension
                         arraySizeWrapper
                           EPSILON
@@ -1041,9 +1041,9 @@
                 statementWrapper
                   statement
                     assignStatAndVar
-                      IDENTIFIERUtility
+                      IDUtility
                       statOrVarExt
-                        IDENTIFIERarrayUtility
+                        IDarrayUtility
                         genericExtension
                           arraySizeWrapper
                             arraySize
@@ -1075,7 +1075,7 @@
                       (
                       type
                         integer
-                      IDENTIFIERt
+                      IDt
                       assignOp
                         =
                       expr
@@ -1095,7 +1095,7 @@
                           term
                             factor
                               variableAndFunctionCall
-                                IDENTIFIERt
+                                IDt
                                 T3
                                   EPSILON
                                 T2
@@ -1118,7 +1118,7 @@
                       assignStat
                         variableIdnestWrapper
                           variableIdnest
-                            IDENTIFIERt
+                            IDt
                             indiceWrapper
                               EPSILON
                           variableIdnestWrapper
@@ -1130,7 +1130,7 @@
                             term
                               factor
                                 variableAndFunctionCall
-                                  IDENTIFIERt
+                                  IDt
                                   T3
                                     EPSILON
                                   T2
@@ -1161,7 +1161,7 @@
                                 term
                                   factor
                                     variableAndFunctionCall
-                                      IDENTIFIERsample
+                                      IDsample
                                       T3
                                         EPSILON
                                       T2
@@ -1171,7 +1171,7 @@
                                             term
                                               factor
                                                 variableAndFunctionCall
-                                                  IDENTIFIERt
+                                                  IDt
                                                   T3
                                                     EPSILON
                                                   T2
@@ -1196,7 +1196,7 @@
                           statementWrapper
                             statement
                               assignStatAndVar
-                                IDENTIFIERsample
+                                IDsample
                                 statOrVarExt
                                   indiceWrapper
                                     indice
@@ -1205,7 +1205,7 @@
                                         term
                                           factor
                                             variableAndFunctionCall
-                                              IDENTIFIERt
+                                              IDt
                                               T3
                                                 EPSILON
                                               T2
@@ -1231,7 +1231,7 @@
                                             term
                                               factor
                                                 variableAndFunctionCall
-                                                  IDENTIFIERsample
+                                                  IDsample
                                                   T3
                                                     EPSILON
                                                   T2
@@ -1241,7 +1241,7 @@
                                                         term
                                                           factor
                                                             variableAndFunctionCall
-                                                              IDENTIFIERt
+                                                              IDt
                                                               T3
                                                                 EPSILON
                                                               T2
@@ -1260,7 +1260,7 @@
                                                   *
                                                 factor
                                                   variableAndFunctionCall
-                                                    IDENTIFIERrandomize
+                                                    IDrandomize
                                                     T3
                                                       EPSILON
                                                     T2
@@ -1289,7 +1289,7 @@
                     statementWrapper
                       statement
                         assignStatAndVar
-                          IDENTIFIERmaxValue
+                          IDmaxValue
                           statOrVarExt
                             EPSILON
                           optionalAssignOp
@@ -1300,12 +1300,12 @@
                                 term
                                   factor
                                     variableAndFunctionCall
-                                      IDENTIFIERutility
+                                      IDutility
                                       T3
                                         .
                                       T2
                                         variableAndFunctionCall
-                                          IDENTIFIERfindMax
+                                          IDfindMax
                                           T3
                                             EPSILON
                                           T2
@@ -1316,7 +1316,7 @@
                                                   term
                                                     factor
                                                       variableAndFunctionCall
-                                                        IDENTIFIERsample
+                                                        IDsample
                                                         T3
                                                           EPSILON
                                                         T2
@@ -1342,7 +1342,7 @@
                       statementWrapper
                         statement
                           assignStatAndVar
-                            IDENTIFIERminValue
+                            IDminValue
                             statOrVarExt
                               EPSILON
                             optionalAssignOp
@@ -1353,12 +1353,12 @@
                                   term
                                     factor
                                       variableAndFunctionCall
-                                        IDENTIFIERutility
+                                        IDutility
                                         T3
                                           .
                                         T2
                                           variableAndFunctionCall
-                                            IDENTIFIERfindMin
+                                            IDfindMin
                                             T3
                                               EPSILON
                                             T2
@@ -1369,7 +1369,7 @@
                                                     term
                                                       factor
                                                         variableAndFunctionCall
-                                                          IDENTIFIERsample
+                                                          IDsample
                                                           T3
                                                             EPSILON
                                                           T2
@@ -1395,7 +1395,7 @@
                         statementWrapper
                           statement
                             assignStatAndVar
-                              IDENTIFIERutility
+                              IDutility
                               statOrVarExt
                                 indiceWrapper
                                   EPSILON
@@ -1403,7 +1403,7 @@
                                   .
                                   variableIdnestWrapper
                                     variableIdnest
-                                      IDENTIFIERvar1
+                                      IDvar1
                                       indiceWrapper
                                         indice
                                           [
@@ -1510,7 +1510,7 @@
                           statementWrapper
                             statement
                               assignStatAndVar
-                                IDENTIFIERarrayUtility
+                                IDarrayUtility
                                 statOrVarExt
                                   indiceWrapper
                                     indice
@@ -1519,12 +1519,12 @@
                                         term
                                           factor
                                             variableAndFunctionCall
-                                              IDENTIFIERutility
+                                              IDutility
                                               T3
                                                 .
                                               T2
                                                 variableAndFunctionCall
-                                                  IDENTIFIERvar1
+                                                  IDvar1
                                                   T3
                                                     EPSILON
                                                   T2
@@ -1606,7 +1606,7 @@
                                                                     term
                                                                       factor
                                                                         variableAndFunctionCall
-                                                                          IDENTIFIERidx
+                                                                          IDidx
                                                                           T3
                                                                             EPSILON
                                                                           T2
@@ -1619,7 +1619,7 @@
                                                                       term
                                                                         factor
                                                                           variableAndFunctionCall
-                                                                            IDENTIFIERmaxValue
+                                                                            IDmaxValue
                                                                             T3
                                                                               EPSILON
                                                                             T2
@@ -1680,7 +1680,7 @@
                                     .
                                     variableIdnestWrapper
                                       variableIdnest
-                                        IDENTIFIERvar2
+                                        IDvar2
                                         indiceWrapper
                                           EPSILON
                                       variableIdnestWrapper
@@ -1709,7 +1709,7 @@
                                     term
                                       factor
                                         variableAndFunctionCall
-                                          IDENTIFIERmaxValue
+                                          IDmaxValue
                                           T3
                                             EPSILON
                                           T2
@@ -1731,7 +1731,7 @@
                                       term
                                         factor
                                           variableAndFunctionCall
-                                            IDENTIFIERminValue
+                                            IDminValue
                                             T3
                                               EPSILON
                                             T2

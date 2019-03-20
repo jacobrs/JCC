@@ -11,17 +11,17 @@ object Compiler {
 
   def main (args: Array[String]): Unit = {
 
-    val programFiles = 3
+    val programFiles = 4
 
     for(i <- 1 to programFiles) {
 
       System.out.println(s"Compiling program$i.txt")
 
       val program1 = Source.fromResource(s"program$i.txt").getLines().mkString("\n")
-      val tokenWriter = new PrintWriter(new File(s"program$i-tokens.txt"))
-      val a2ccWriter = new PrintWriter(new File(s"program$i-a2cc.txt"))
-      val astWriter = new PrintWriter(new File(s"program$i-ast.txt"))
-      val symbolWriter = new PrintWriter(new File(s"program$i-symbols.txt"))
+      val tokenWriter = new PrintWriter(new File(s"output/program$i-tokens.txt"))
+      val a2ccWriter = new PrintWriter(new File(s"output/program$i-a2cc.txt"))
+      val astWriter = new PrintWriter(new File(s"output/program$i-ast.txt"))
+      val symbolWriter = new PrintWriter(new File(s"output/program$i-symbols.txt"))
 
       val tokens = Tokenizer.parse(program1)
       val output = tokens.map(token =>

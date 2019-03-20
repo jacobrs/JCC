@@ -107,13 +107,20 @@ class SymbolTableGenerator {
         // detected variable
         val varType = root.children.head.value
         val varName = root.children(1).value
-        if(varName != "statOrVarExt")
-          table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+        if(varName != "statOrVarExt") {
+          table.symbols.exists(c => c.name.equals(varName)).fold(
+            println(s"$varName was already declared in this scope"),
+            table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+          )
+        }
       case "genericDecl" =>
         // detected variable declaration
         val varType = root.children.head.children.head.value
         val varName = root.children(1).value
-        table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+        table.symbols.exists(c => c.name.equals(varName)).fold(
+          println(s"$varName was already declared in this scope"),
+          table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+        )
       case _ =>
         root.children.foreach(traverseAttributes(_, table))
     }
