@@ -7,9 +7,9 @@ object AtoCCConverter {
   def convertToAtoCC(tokens: Seq[Token]): String = {
 
     tokens.map {
-      case OPERATOR(v) => s"$v "
-      case PUNCTUATION(v) => s"$v "
-      case v@(INTEGER(_)|FLOAT(_)|ID(_)|RESERVED(_)) =>
+      case OPERATOR(v, _) => s"$v "
+      case PUNCTUATION(v, _) => s"$v "
+      case v@(INTEGER(_, _)|FLOAT(_, _)|ID(_, _)|RESERVED(_, _)) =>
         s"${v.getClass.getSimpleName.toUpperCase()} "
       case _ => ""
     }.mkString("")

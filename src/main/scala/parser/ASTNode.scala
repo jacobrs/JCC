@@ -1,9 +1,12 @@
 package parser
 
-class ASTNode(v: String, metadata: Option[String] = None) {
+import tokenizer.Token.Location
+
+class ASTNode(v: String, loc: Location = Location(0,0), metadata: Option[String] = None) {
 
   val value: String = v
   var children: Seq[ASTNode] = Seq.empty
+  val location: Location = loc
 
   def addChild(child: ASTNode): Unit ={
     children = children ++ Seq(child)
