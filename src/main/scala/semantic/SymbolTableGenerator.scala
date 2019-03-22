@@ -15,6 +15,7 @@ class SymbolTableGenerator {
   def generate(tree: ASTNode): Unit = {
     currentRoot = tree
     tree.children.foreach(traverse)
+    tree.children.foreach(validateAssignments)
   }
 
   def traverse(root: ASTNode): Unit = {
@@ -37,6 +38,20 @@ class SymbolTableGenerator {
     }
   }
 
+  def validateAssignments(root: ASTNode): Unit = {
+    // extract current node
+    root.value match {
+      case "funcDef" =>
+        validateFunctionBody(root)
+      case "funcBody" =>
+        validateAssignments(root, globalTable.symbols.find(
+          p => p.kind.equals("function") && p.name.equals("main")).fold(new SymbolTable("empty"))
+        (_.link.getOrElse(new SymbolTable("empty"))))
+      case _ =>
+        root.children.foreach(validateAssignments)
+    }
+  }
+
   def traverseClass(root: ASTNode): SymbolEntry = {
     val className = root.children(1).value
     val classSymbolTable = new SymbolTable(className)
@@ -50,6 +65,7 @@ class SymbolTableGenerator {
 
   def traverseFunction(root: ASTNode): Option[SymbolEntry] = {
     val head = root.children.head
+    val functionReturnType = head.children.head.children.head.value
     val optionalIDSR = head.children(1)
     val optionalIDSRExt = head.children(1).children(1)
 
@@ -60,13 +76,58 @@ class SymbolTableGenerator {
         val parameterSymbols = getFunctionParameters(head)
         parameterSymbols.foreach(functionSymbolTable.addSymbol)
         traverseAttributes(root, functionSymbolTable)
-        Some(SymbolEntry(functionName, "function", head.children.head.children.head.value, Some(functionSymbolTable)))
+        validateFunctionReturnType(functionReturnType, root, functionSymbolTable)
+        Some(SymbolEntry(functionName, "function", functionReturnType, Some(functionSymbolTable)))
       }, {
         // function belongs to class
         addFunctionToClass(root)
         None
       }
     )
+  }
+
+  def validateFunctionBody(root: ASTNode): Unit = {
+    val head = root.children.head
+    val optionalIDSR = head.children(1)
+    val optionalIDSRExt = head.children(1).children(1)
+
+    (optionalIDSRExt.children.size < 2).fold({
+        // function belongs to global table
+        val functionName = optionalIDSR.children.head.value
+        validateAssignments(root, globalTable.symbols.find(
+          p => p.kind.equals("function") && p.name.equals(functionName)).fold(new SymbolTable("empty"))
+        (_.link.getOrElse(new SymbolTable("empty"))))
+      }, {
+        // function belongs to class
+        val className = optionalIDSR.children.head.value
+        validateAssignments(root, globalTable.symbols.find(
+          p => p.kind.equals("class") && p.name.equals(className)).fold(new SymbolTable("empty"))
+            (_.link.getOrElse(new SymbolTable("empty"))))
+      }
+    )
+  }
+
+  def validateAssignments(root: ASTNode, scope: SymbolTable): Unit = {
+    root.value match {
+      case "assignStatAndVar" =>
+        // detected variable
+        val varType = root.children.head.value
+        var varName = root.children(1).value
+        if (varName.equals("statOrVarExt")) {
+          varName = root.children(1).children.head.value
+          if (varName.equals("EPSILON") && root.children(2).children.size > 1) {
+            // this is an assignment statement
+            val varIdentifier = root.children.head.value
+            val expr = root.children(2).children(1)
+            validateSubtreeIsOnlyOfTypeX(deriveTypeFromID(varIdentifier, scope).getOrElse("Null"), expr, scope)
+          } else if (root.children(2).children.size > 1) {
+            val expr = root.children(2).children(1)
+            validateSubtreeIsOnlyOfTypeX(deriveTypeFromID(varType, scope).getOrElse("Null"), expr, scope)
+          }
+        }
+      case _ =>
+        root.children.foreach(validateAssignments(_, scope))
+    }
   }
 
   /**
@@ -76,6 +137,7 @@ class SymbolTableGenerator {
     */
   def addFunctionToClass(functionRoot: ASTNode): Unit = {
     val head = functionRoot.children.head
+    val functionReturnType = head.children.head.children.head.value
     val parameterSymbols = getFunctionParameters(head)
     val optionalIDSR = head.children(1)
     val optionalIDSRExt = head.children(1).children(1)
@@ -90,10 +152,11 @@ class SymbolTableGenerator {
       parameterSymbols.foreach(functionSymbolTable.addSymbol)
       traverseAttributes(functionRoot, functionSymbolTable)
       val classFunctionSymbol =
-        SymbolEntry(functionName, "function", head.children.head.children.head.value, Some(functionSymbolTable))
+        SymbolEntry(functionName, "function", functionReturnType, Some(functionSymbolTable))
       val newClassTable = s.link.getOrElse(new SymbolTable(className))
       newClassTable.symbols = newClassTable.symbols.filter(s => !s.name.equals(functionName))
       newClassTable.addSymbol(classFunctionSymbol)
+      validateFunctionReturnType(functionReturnType, functionRoot, newClassTable)
       globalTable.symbols = globalTable.symbols.filter(s => !(s.kind.equals("class") && s.name.equals(className))) ++
         Seq(s.copy(link = Some(newClassTable)))
     })
@@ -110,12 +173,20 @@ class SymbolTableGenerator {
       case "assignStatAndVar" =>
         // detected variable
         val varType = root.children.head.value
-        val varName = root.children(1).value
-        if(varName != "statOrVarExt") {
+        var varName = root.children(1).value
+        if (varName != "statOrVarExt") {
           table.symbols.exists(c => c.name.equals(varName)).fold(
             errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
             table.addSymbol(SymbolEntry(varName, "variable", varType, None))
           )
+        } else {
+          varName = root.children(1).children.head.value
+          if (root.children(2).children.size <= 1) {
+            table.symbols.exists(c => c.name.equals(varName)).fold(
+              errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
+              table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+            )
+          }
         }
       case "genericDecl" =>
         // detected variable declaration
@@ -183,6 +254,72 @@ class SymbolTableGenerator {
       },
       Seq.empty[SymbolEntry]
     )
+  }
+
+  def validateFunctionReturnType(expectedReturnType: String, root: ASTNode, scopeRoot: SymbolTable): Unit = {
+    (root.children.count(_.value.equals("return")) > 0).fold(
+        validateSubtreeIsOnlyOfTypeX(expectedReturnType, root.children(2), scopeRoot),
+        root.children.foreach(validateFunctionReturnType(expectedReturnType, _, scopeRoot))
+    )
+  }
+
+  def validateSubtreeIsOnlyOfTypeX(x: String, root: ASTNode, scopeRoot: SymbolTable): Unit = {
+    x match {
+      case "integer" =>
+        root.metadata.fold()({
+          case "INTEGER" =>
+          case "FLOAT" =>
+            errors = errors ++ Seq(SemanticError(s"[error] invalid expr of type float expected $x",
+              root.location))
+          case t =>
+            testTypeMatch(root, x, scopeRoot)
+        })
+      case "float" =>
+        root.metadata.fold()({
+          case "FLOAT" =>
+          case "INTEGER" =>
+            errors = errors ++ Seq(SemanticError(s"[error] invalid expr of type integer expected $x",
+              root.location))
+          case t =>
+            testTypeMatch(root, x, scopeRoot)
+        })
+      case _ =>
+        root.metadata.fold()({
+          case "ID" =>
+            testTypeMatch(root, x, scopeRoot)
+          case t =>
+            errors = errors ++ Seq(SemanticError(s"[error] invalid expr of type ${t.toLowerCase} expected $x",
+              root.location))
+        })
+    }
+    root.children.foreach(validateSubtreeIsOnlyOfTypeX(x, _, scopeRoot))
+  }
+
+  def testTypeMatch(root: ASTNode, x: String, scopeRoot: SymbolTable): Unit = {
+    val idType = deriveTypeFromID(root.value, scopeRoot)
+    idType.fold(
+      errors = errors ++ Seq(SemanticError(s"[error] ${root.value} has no derived type", root.location))
+    )( t => {
+        if (t.equals(x)) {
+          println(s"[debug] derived type ${idType.getOrElse("Null")} of ${root.value}")
+        } else {
+          errors = errors ++ Seq(SemanticError(s"[error] invalid expr of type ${idType.getOrElse("Null")}" +
+            s" expected $x", root.location))
+        }
+      }
+    )
+  }
+
+  def deriveTypeFromID(identifier: String, scopeRoot: SymbolTable): Option[String] = {
+    var derivedType: Option[String] = None
+    scopeRoot.symbols.foreach(f => {
+        if (f.name.equals(identifier)){
+          derivedType = Some(f.dataType)
+        }else if(derivedType.isEmpty){
+          derivedType = f.link.fold(derivedType)(deriveTypeFromID(identifier, _))
+        }
+      })
+    derivedType
   }
 }
 

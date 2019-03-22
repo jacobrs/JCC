@@ -7,16 +7,18 @@ class CompilerPackage: CompilerStarter {
     float loadTime;
 };
 
-class Compiler: CompilerPackage, TestKit, CompilerMeter {
-    integer tested;
+class Compiler: CompilerPackage, TestKit {
+    float tested;
     integer test();
 };
 
-integer Compiler::test(integer t) {
-    this.tested = t;
+float Compiler::test(float t) {
+    tested = t;
+    return (12.2);
 };
 
 main {
     Compiler comp;
+    integer comp = 12;
     integer result = comp.test(12);
 };

@@ -25,19 +25,20 @@
 +------------------
 | loadTime | variable | float
 | computationTime | variable | float
-| tested | variable | integer
-| test | function | integer
+| tested | variable | float
+| test | function | float
 +------------------
 
 +------------------
 | test
 +------------------
-| t | parameter | integer
+| t | parameter | float
 +------------------
 
 +------------------
 | main
 +------------------
+| comp | variable | Compiler
 | result | variable | integer
 +------------------
 

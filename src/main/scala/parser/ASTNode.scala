@@ -2,7 +2,7 @@ package parser
 
 import tokenizer.Token.Location
 
-class ASTNode(v: String, loc: Location = Location(0,0), metadata: Option[String] = None) {
+class ASTNode(v: String, loc: Location = Location(0,0), val metadata: Option[String] = None) {
 
   val value: String = v
   var children: Seq[ASTNode] = Seq.empty
