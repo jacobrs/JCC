@@ -38,6 +38,7 @@
 +------------------
 | main
 +------------------
+| comp | variable | Compiler
 | result | variable | integer
 +------------------
 

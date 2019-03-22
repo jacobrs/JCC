@@ -52,5 +52,7 @@
 | idx | variable | integer
 | maxValue | variable | integer
 | minValue | variable | integer
+| utility | variable | Utility
+| arrayUtility | variable | Utility
 +------------------
 

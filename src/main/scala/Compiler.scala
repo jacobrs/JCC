@@ -14,7 +14,7 @@ object Compiler {
 
     val programFiles = 4
 
-    for(i <- 4 to programFiles) {
+    for(i <- 1 to programFiles) {
 
       System.out.println(s"Compiling program$i.txt")
 
