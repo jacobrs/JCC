@@ -28,8 +28,8 @@ object Tokenizer extends Enumeration {
     var tokens = Seq.empty[Token]
     var currentState = State(STARTING_TAG, Seq())
 
-    var col = 0
-    var row = 0
+    var col = 1
+    var row = 1
     cleanBody.foreach {
       c => {
         if(c.equals('\n')){

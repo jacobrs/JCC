@@ -7,7 +7,7 @@ class CompilerPackage: CompilerStarter {
     float loadTime;
 };
 
-class Compiler: CompilerPackage {
+class Compiler: CompilerPackage, TestKit, CompilerMeter {
     integer tested;
     integer test();
 };

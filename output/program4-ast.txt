@@ -59,7 +59,15 @@
               :
               IDCompilerPackage
               idWrapper
-                EPSILON
+                idEntity
+                  ,
+                  IDTestKit
+                idWrapper
+                  idEntity
+                    ,
+                    IDCompilerMeter
+                  idWrapper
+                    EPSILON
             {
             genericDeclWrapper
               genericDecl

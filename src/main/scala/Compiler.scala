@@ -2,6 +2,7 @@ import java.io.{File, PrintWriter}
 
 import parser.Parser
 import semantic.SymbolTableGenerator
+import semantic.SymbolTableGenerator.SemanticError
 import tokenizer.{AtoCCConverter, Tokenizer}
 
 import scala.io.Source
@@ -45,8 +46,15 @@ object Compiler {
       symbolWriter.write(semanticParser.globalTable.printOutput())
       symbolWriter.close()
 
+      semanticParser.errors.
+        sortWith((a,b) => a.location.row < b.location.row && a.location.col < b.location.col).
+        foreach(printSemanticError)
+
     }
 
   }
+
+  def printSemanticError(error: SemanticError): Unit = println(
+    s"${error.message} @ L${error.location.row}:${error.location.col}")
 
 }

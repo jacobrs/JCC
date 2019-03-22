@@ -3,11 +3,14 @@ package semantic
 import parser.ASTNode
 import semantic.Symbol.SymbolEntry
 import scalaz.syntax.std.boolean._
+import semantic.SymbolTableGenerator.SemanticError
+import tokenizer.Token.Location
 
 class SymbolTableGenerator {
 
   var globalTable = new SymbolTable("global")
   var currentRoot = new ASTNode("prog")
+  var errors: Seq[SemanticError] = Seq.empty
 
   def generate(tree: ASTNode): Unit = {
     currentRoot = tree
@@ -80,7 +83,8 @@ class SymbolTableGenerator {
     val className = optionalIDSR.children.head.value
     val classSymbol = globalTable.symbols.find(s => s.kind.equals("class") && s.name.equals(className))
     classSymbol.fold(
-      println(s"$className::$functionName semantic error $className not defined")
+      errors = errors ++ Seq(
+        SemanticError(s"[error] $className::$functionName semantic error $className not defined", head.location))
     )(s => {
       val functionSymbolTable = new SymbolTable(functionName)
       parameterSymbols.foreach(functionSymbolTable.addSymbol)
@@ -109,7 +113,7 @@ class SymbolTableGenerator {
         val varName = root.children(1).value
         if(varName != "statOrVarExt") {
           table.symbols.exists(c => c.name.equals(varName)).fold(
-            println(s"$varName was already declared in this scope"),
+            errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
             table.addSymbol(SymbolEntry(varName, "variable", varType, None))
           )
         }
@@ -118,7 +122,7 @@ class SymbolTableGenerator {
         val varType = root.children.head.children.head.value
         val varName = root.children(1).value
         table.symbols.exists(c => c.name.equals(varName)).fold(
-          println(s"$varName was already declared in this scope"),
+          errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
           table.addSymbol(SymbolEntry(varName, "variable", varType, None))
         )
       case _ =>
@@ -150,7 +154,8 @@ class SymbolTableGenerator {
           val inheritedClassName = optionalIDExt.children(1).value
           val classSymbol = globalTable.symbols.find(s => s.name.equals(inheritedClassName) && s.kind.equals("class"))
           classSymbol.fold[Seq[SymbolEntry]]({
-              println(s"[error] inherited class $inheritedClassName not defined")
+              errors = errors ++ Seq(
+                SemanticError(s"[error] inherited class $inheritedClassName not defined", optionalIDExt.location))
               Seq.empty
             })({
               s =>
@@ -167,7 +172,8 @@ class SymbolTableGenerator {
         val inheritedClassName = idWrapper.children.head.children(1).value
         val classSymbol = globalTable.symbols.find(s => s.name.equals(inheritedClassName) && s.kind.equals("class"))
         classSymbol.fold[Seq[SymbolEntry]]({
-            println(s"[error] inherited class $inheritedClassName not defined")
+          errors = errors ++ Seq(
+            SemanticError(s"[error] inherited class $inheritedClassName not defined", idWrapper.location))
             Seq.empty
           })({
             s =>
@@ -178,4 +184,8 @@ class SymbolTableGenerator {
       Seq.empty[SymbolEntry]
     )
   }
+}
+
+object SymbolTableGenerator {
+  case class SemanticError(message: String, location: Location)
 }
