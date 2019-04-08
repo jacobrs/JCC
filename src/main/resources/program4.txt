@@ -1,3 +1,15 @@
+/*
+class A {
+    integer var1;
+};
+class B {
+    integer var2;
+};
+class C : B {};
+class D : A, B {};
+class E : C, D {};
+
+*/
 class CompilerStarter {
     float loadTime;
 };

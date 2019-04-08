@@ -103,19 +103,9 @@
           statementWrapper
             statement
               assignStatAndVar
-                IDthis
+                IDtested
                 statOrVarExt
-                  indiceWrapper
-                    EPSILON
-                  indiceExtInt
-                    .
-                    variableIdnestWrapper
-                      variableIdnest
-                        IDtested
-                        indiceWrapper
-                          EPSILON
-                      variableIdnestWrapper
-                        EPSILON
+                  EPSILON
                 optionalAssignOp
                   assignOp
                     =

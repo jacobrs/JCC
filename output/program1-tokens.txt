@@ -40,8 +40,6 @@
 [id:t]
 [punctuation:)]
 [punctuation:{]
-[id:this]
-[punctuation:.]
 [id:tested]
 [punctuation:=]
 [id:t]

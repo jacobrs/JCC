@@ -12,7 +12,7 @@ class Compiler: CompilerPackage {
 };
 
 integer Compiler::test(integer t) {
-    this.tested = t;
+    tested = t;
 };
 
 main {
