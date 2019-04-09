@@ -69,11 +69,7 @@
               :
               IDCompilerPackage
               idWrapper
-                idEntity
-                  ,
-                  IDTestKit
-                idWrapper
-                  EPSILON
+                EPSILON
             {
             genericDeclWrapper
               genericDecl
@@ -207,7 +203,74 @@
               optionalAssignOp
                 ;
           statementWrapper
-            EPSILON
+            statement
+              assignStatAndVar
+                integer
+                IDtest
+                genericExtension
+                  arraySizeWrapper
+                    EPSILON
+                optionalAssignOp
+                  assignOp
+                    =
+                  expr
+                    arithExpr
+                      term
+                        factor
+                          INTEGER10
+                        termPrime
+                          EPSILON
+                      arithExprPrime
+                        EPSILON
+                    exprExt
+                      EPSILON
+                  ;
+            statementWrapper
+              statement
+                assignStatAndVar
+                  integer
+                  IDtest2
+                  genericExtension
+                    arraySizeWrapper
+                      EPSILON
+                  optionalAssignOp
+                    assignOp
+                      =
+                    expr
+                      arithExpr
+                        term
+                          factor
+                            INTEGER33
+                          termPrime
+                            EPSILON
+                        arithExprPrime
+                          EPSILON
+                      exprExt
+                        EPSILON
+                    ;
+              statementWrapper
+                statement
+                  assignStatAndVar
+                    IDtest
+                    statOrVarExt
+                      EPSILON
+                    optionalAssignOp
+                      assignOp
+                        =
+                      expr
+                        arithExpr
+                          term
+                            factor
+                              INTEGER12
+                            termPrime
+                              EPSILON
+                          arithExprPrime
+                            EPSILON
+                        exprExt
+                          EPSILON
+                      ;
+                statementWrapper
+                  EPSILON
       }
     ;
     

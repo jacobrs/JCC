@@ -19,7 +19,7 @@ class CompilerPackage: CompilerStarter {
     float loadTime;
 };
 
-class Compiler: CompilerPackage, TestKit {
+class Compiler: CompilerPackage {
     float tested;
     integer test();
 };
@@ -32,4 +32,7 @@ float Compiler::test(float t) {
 main {
     Compiler comp;
     integer results[10][10];
+    integer test = 10;
+    integer test2 = 33;
+    test = 12;
 };
