@@ -174,17 +174,18 @@ class SymbolTableGenerator {
         // detected variable
         val varType = root.children.head.value
         var varName = root.children(1).value
+        val dimensions = parseArrayDimensions(root)
         if (varName != "statOrVarExt") {
           table.symbols.exists(c => c.name.equals(varName)).fold(
             errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
-            table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+            table.addSymbol(SymbolEntry(varName, "variable", varType, None, dimensions))
           )
         } else {
           varName = root.children(1).children.head.value
           if (root.children(2).children.size <= 1) {
             table.symbols.exists(c => c.name.equals(varName)).fold(
               errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
-              table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+              table.addSymbol(SymbolEntry(varName, "variable", varType, None, dimensions))
             )
           }
         }
@@ -202,6 +203,12 @@ class SymbolTableGenerator {
     }
   }
 
+  /**
+    * parseArrayDimensions parses a subtree of the AST to find an arrays dimensions
+    * @param root root of the AST subtree that contains dimensions
+    * @param currentDimensions dimensions found so far
+    * @return all dimensions found in order
+    */
   def parseArrayDimensions(root: ASTNode, currentDimensions: Seq[Int] = Seq.empty): Seq[Int] = {
     var newDimensions = currentDimensions
     root.value match {

@@ -31,6 +31,5 @@ float Compiler::test(float t) {
 
 main {
     Compiler comp;
-    integer comp = 12;
-    integer result = comp.test(12);
+    integer results[10][10];
 };

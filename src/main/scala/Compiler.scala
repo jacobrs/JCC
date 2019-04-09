@@ -1,5 +1,7 @@
 import java.io.{File, PrintWriter}
 
+import generator.CodeGenerator._
+import generator.SymbolMemoryTable
 import parser.Parser
 import semantic.SymbolTableGenerator
 import semantic.SymbolTableGenerator.SemanticError
@@ -14,17 +16,17 @@ object Compiler {
 
     val programFiles = 4
 
-    for(i <- 4 to programFiles) {
+    for(i <- 1 to programFiles) {
 
       System.out.println(s"Compiling program$i.txt")
 
-      val program1 = Source.fromResource(s"program$i.txt").getLines().mkString("\n")
+      val program = Source.fromResource(s"program$i.txt").getLines().mkString("\n")
       val tokenWriter = new PrintWriter(new File(s"output/program$i-tokens.txt"))
       val a2ccWriter = new PrintWriter(new File(s"output/program$i-a2cc.txt"))
       val astWriter = new PrintWriter(new File(s"output/program$i-ast.txt"))
       val symbolWriter = new PrintWriter(new File(s"output/program$i-symbols.txt"))
 
-      val tokens = Tokenizer.parse(program1)
+      val tokens = Tokenizer.parse(program)
       val output = tokens.map(token =>
         s"[${token.getClass.getSimpleName.toLowerCase()}:${token.value}]"
       ).mkString("\n")
@@ -43,12 +45,16 @@ object Compiler {
       // symbol generation
       val semanticParser = new SymbolTableGenerator()
       semanticParser.generate(result.tree)
-      symbolWriter.write(semanticParser.globalTable.printOutput())
-      symbolWriter.close()
 
       semanticParser.errors.
         sortWith((a,b) => a.location.row < b.location.row && a.location.col < b.location.col).
         foreach(printSemanticError)
+
+      val symbolTableWithMemoryOffsets = new SymbolMemoryTable(semanticParser.globalTable)
+      symbolWriter.write(symbolTableWithMemoryOffsets.printOutput())
+      symbolWriter.close()
+
+      generateCode(result.tree, symbolTableWithMemoryOffsets, s"output/program$i.m")
 
     }
 
