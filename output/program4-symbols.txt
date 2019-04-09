@@ -10,21 +10,23 @@
 +------------------
 | CompilerStarter
 +------------------
-| loadTime | variable | float
+| loadTimes | variable | float[3][4]
 +------------------
 
 +------------------
 | CompilerPackage
 +------------------
-| loadTime | variable | float
+| loadTimes | variable | float[3][4]
 | computationTime | variable | float
+| loadTime | variable | float
 +------------------
 
 +------------------
 | Compiler
 +------------------
-| loadTime | variable | float
+| loadTimes | variable | float[3][4]
 | computationTime | variable | float
+| loadTime | variable | float
 | tested | variable | float
 | test | function | float
 +------------------

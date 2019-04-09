@@ -11,7 +11,7 @@ class E : C, D {};
 
 */
 class CompilerStarter {
-    float loadTime;
+    float loadTimes[3][4];
 };
 
 class CompilerPackage: CompilerStarter {

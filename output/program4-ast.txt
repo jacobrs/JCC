@@ -10,10 +10,20 @@
           genericDecl
             type
               float
-            IDloadTime
+            IDloadTimes
             genericExtension
               arraySizeWrapper
-                EPSILON
+                arraySize
+                  [
+                  INTEGER3
+                  ]
+                arraySizeWrapper
+                  arraySize
+                    [
+                    INTEGER4
+                    ]
+                  arraySizeWrapper
+                    EPSILON
             ;
           genericDeclWrapper
             EPSILON

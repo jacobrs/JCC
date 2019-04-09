@@ -2,6 +2,6 @@ package semantic
 
 object Symbol {
 
-  case class SymbolEntry(name: String, kind: String, dataType: String, link: Option[SymbolTable])
-
+  case class SymbolEntry(name: String, kind: String, dataType: String, link: Option[SymbolTable],
+                         arrayDimensions: Seq[Int] = Seq.empty)
 }

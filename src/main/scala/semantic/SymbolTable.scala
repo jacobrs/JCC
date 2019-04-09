@@ -16,7 +16,7 @@ class SymbolTable(tableName: String) {
     val header = s"+------------------\n| $name\n+------------------\n"
     var body = ""
     symbols.foreach(s => {
-      body += s"| ${s.name} | ${s.kind} | ${s.dataType}\n"
+      body += s"| ${s.name} | ${s.kind} | ${printType(s)}\n"
       s.link.fold()(l => nestedTables = nestedTables ++ Seq(l))
     })
     val footer = "+------------------\n\n"
@@ -24,6 +24,12 @@ class SymbolTable(tableName: String) {
 
     nestedTables.foreach(t => output += t.printOutput())
 
+    output
+  }
+
+  def printType(t: SymbolEntry): String = {
+    var output = t.dataType
+    t.arrayDimensions.foreach(output += "[" + _ + "]")
     output
   }
 

@@ -1,6 +1,8 @@
 .idea
 target
-*-parse.txt
+*-symbols.txt
+*.tokens.txt
+*-ast.txt
 *-a2cc.txt
 *.pages
 .DS_Store

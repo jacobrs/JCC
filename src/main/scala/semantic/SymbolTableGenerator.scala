@@ -192,13 +192,26 @@ class SymbolTableGenerator {
         // detected variable declaration
         val varType = root.children.head.children.head.value
         val varName = root.children(1).value
+        val dimensions = parseArrayDimensions(root.children(2))
         table.symbols.exists(c => c.name.equals(varName)).fold(
           errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
-          table.addSymbol(SymbolEntry(varName, "variable", varType, None))
+          table.addSymbol(SymbolEntry(varName, "variable", varType, None, dimensions))
         )
       case _ =>
         root.children.foreach(traverseAttributes(_, table))
     }
+  }
+
+  def parseArrayDimensions(root: ASTNode, currentDimensions: Seq[Int] = Seq.empty): Seq[Int] = {
+    var newDimensions = currentDimensions
+    root.value match {
+      case "arraySize" =>
+        newDimensions = Seq(root.children(1).value.toInt) ++ currentDimensions
+      case _ =>
+        root.children.foreach(node =>
+          newDimensions = newDimensions ++ parseArrayDimensions(node, currentDimensions))
+    }
+    newDimensions
   }
 
   def getFunctionParameters(root: ASTNode): Seq[SymbolEntry] = {
