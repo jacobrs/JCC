@@ -1,0 +1,21 @@
+class Crusher {
+    integer crushMultiple;
+    integer crush();
+};
+
+integer Crusher::crush(integer a, integer b) {
+    integer c = a + b;
+    return(c);
+};
+
+integer print(integer toBePrinted) {
+    write(toBePrinted);
+    return(0);
+};
+
+main {
+    integer myint = 10;
+    Crusher crusher;
+    write(myint);
+    print(12);
+};

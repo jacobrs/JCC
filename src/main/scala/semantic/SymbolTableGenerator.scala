@@ -182,7 +182,7 @@ class SymbolTableGenerator {
           )
         } else {
           varName = root.children(1).children.head.value
-          if (root.children(2).children.size <= 1) {
+          if (root.children(2).children.size <= 1 && root.children(1).children.size < 4) {
             table.symbols.exists(c => c.name.equals(varName)).fold(
               errors = errors ++ Seq(SemanticError(s"[error] $varName was already declared in this scope", root.location)),
               table.addSymbol(SymbolEntry(varName, "variable", varType, None, dimensions))
@@ -233,7 +233,7 @@ class SymbolTableGenerator {
   def parseTail(fParamsTailWrapper: ASTNode): Seq[SymbolEntry] = {
     (fParamsTailWrapper.children.size > 1).fold[Seq[SymbolEntry]](
       Seq(SymbolEntry(fParamsTailWrapper.children.head.children(2).value, "parameter",
-        fParamsTailWrapper.children.head.children(1).value, None))
+        fParamsTailWrapper.children.head.children(1).children.head.value, None))
         ++ parseTail(fParamsTailWrapper.children.head.children(3)),
       Seq.empty[SymbolEntry]
     )

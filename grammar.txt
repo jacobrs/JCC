@@ -21,9 +21,10 @@ aParams                 -> EPSILON | expr aParamsTailWrapper
 aParamsTailWrapper      -> EPSILON | aParamsTail aParamsTailWrapper
 aParamsTail             -> , expr
 statementWrapper        -> EPSILON | statement statementWrapper
-assignStatAndVar        -> integer id genericExtension optionalAssignOp  | float id genericExtension optionalAssignOp | id statOrVarExt optionalAssignOp
+assignStatAndVar        -> integer id genericExtension optionalAssignOp | float id genericExtension optionalAssignOp | id statOrVarExt optionalAssignOp
 optionalAssignOp        -> assignOp expr ; | ;
-statOrVarExt            -> id genericExtension | indiceWrapper indiceExtInt | ( aParams ) . variableIdnestWrapper | EPSILON
+statOrVarExt            -> id genericExtension | indiceWrapper indiceExtInt | ( aParams ) optionalDotAndIdnest | EPSILON
+optionalDotAndIdnest	-> . variableIdnestWrapper | EPSILON
 indiceExtInt            -> EPSILON | . variableIdnestWrapper
 statement               -> assignStatAndVar | if ( expr ) then statBlock else statBlock ; | for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; | read ( variableIdnestWrapper ) ; | write ( expr ) ; | return ( expr ) ;
 arraySizeWrapper        -> EPSILON | arraySize arraySizeWrapper
@@ -53,4 +54,3 @@ idnest                  -> id idnestExt
 idnestExt               -> indiceWrapper . | ( aParams ) .
 indiceWrapper           -> EPSILON | indice indiceWrapper
 indice                  -> [ arithExpr ]
-

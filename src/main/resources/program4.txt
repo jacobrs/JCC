@@ -35,4 +35,6 @@ main {
     integer test = 10;
     integer test2 = 33;
     test = 12;
+    write(test2);
+    write(23413);
 };

@@ -1,5 +1,6 @@
 package parser
 
+import parser.Parser.variableIdnestWrapper
 import tokenizer.Token
 import tokenizer.Token._
 
@@ -522,7 +523,7 @@ object Parser {
         }
       case PUNCTUATION("(", _) =>
         if (m(PUNCTUATION("("), root) && aParams(root) && m(PUNCTUATION(")"), root) &&
-          m(PUNCTUATION("."), root) && variableIdnestWrapper(root)) {
+          optionalDotAndIdnest(root)) {
         } else {
           error = true
         }
@@ -532,6 +533,24 @@ object Parser {
           error = true
         }
       case PUNCTUATION("=", _) | PUNCTUATION(";", _) =>
+        root.addChild(new ASTNode("EPSILON", loc = lookahead.location))
+      case _ =>
+        error = true
+    }
+    parent.addChild(root)
+    !error
+  }
+
+  private def optionalDotAndIdnest(parent: ASTNode): Boolean = {
+    var error = false
+    val root = new ASTNode("optionalDotAndIdnest", loc = lookahead.location)
+    lookahead match {
+      case PUNCTUATION(".", _) =>
+        if (m(PUNCTUATION("."), root) && variableIdnestWrapper(root)) {
+        } else {
+          error = true
+        }
+      case PUNCTUATION(";", _) | PUNCTUATION("=", _) =>
         root.addChild(new ASTNode("EPSILON", loc = lookahead.location))
       case _ =>
         error = true

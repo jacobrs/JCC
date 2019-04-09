@@ -8,15 +8,46 @@ import scalaz.syntax.std.boolean._
 object GeneratorTraversers {
 
   val allRegisters: Seq[String] =
-    Seq("r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14")
+    Seq("r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13")
+
+  case class FunctionHeadExtractionResult(name: String, className: Option[String] = None)
 
   def traverseMain(symbols: SymbolMemoryTable, ast: ASTNode, writer: PrintWriter): Unit = {
     ast.children.foreach(c => c.value match {
       case "funcBody" =>
         // this is the main function
+        writer.write(f"main            align\n")
         traverseFunction(symbols, c, writer)
       case _ => // no op
     })
+  }
+
+  def traverseOtherFunctions(symbols: SymbolMemoryTable, ast: ASTNode, writer: PrintWriter): Unit = {
+    ast.children.find(_.value.equals("funcDefWrapper")).fold()(
+      traverseFunctionDef(symbols, _, writer)
+    )
+  }
+
+  def traverseFunctionDef(symbols: SymbolMemoryTable, ast: ASTNode, writer: PrintWriter): Unit = {
+    ast.children.foreach(n => n.value match {
+      case "funcDef" => // this is a function
+        val result = extractFunctionName(n.children.head)
+        val functionTag = result.className.fold("")(_+"_") + result.name
+        CodeGenerator.allocateMemoryForFunction(symbols, result.name, result.className, writer)
+        writer.write(f"$functionTag%-15s align\n")
+        n.children.foreach(traverseFunction(symbols, _, writer))
+        writer.write(f"${" "}%-15s jr    r14\n")
+      case _ => // not a function maybe a wrapper
+        ast.children.foreach(traverseFunctionDef(symbols, _, writer))
+    })
+  }
+
+  def extractFunctionName(funcHeadNode: ASTNode): FunctionHeadExtractionResult = {
+    (funcHeadNode.children(1).children(1).children.size > 1).fold(
+      FunctionHeadExtractionResult(funcHeadNode.children(1).children(1).children.last.value,
+        Some(funcHeadNode.children(1).children.head.value)),
+      FunctionHeadExtractionResult(funcHeadNode.children(1).children.head.value)
+    )
   }
 
   def traverseFunction(symbols: SymbolMemoryTable, node: ASTNode, writer: PrintWriter): Unit = {
@@ -24,6 +55,11 @@ object GeneratorTraversers {
       case "assignStatAndVar" =>
         val target = node.children((node.children.size > 3).fold(1, 0))
         traverseAssignStartAndVar(symbols, node.children.last, writer, target.value)
+      case "statement" =>
+        if(node.children.exists(p => p.value.equals("write"))) {
+          GeneratorIO.traverseWrite(symbols, node.children(2), writer)
+        }
+        node.children.foreach(traverseFunction(symbols, _, writer))
       case _ => node.children.foreach(traverseFunction(symbols, _, writer))
     }
   }
@@ -49,7 +85,7 @@ object GeneratorTraversers {
         writer.write(f"${" "}%-15s addi  ${availableRegisters.head},r0,${node.value}\n")
         availableRegisters.head
       case Some("ID") =>
-        writer.write(f"${" "}%-15s addi  ${availableRegisters.head},r0,${node.value}(r0)\n")
+        writer.write(f"${" "}%-15s lw    ${availableRegisters.head},${node.value}(r0)\n")
         availableRegisters.head
       case _ =>
         node.children.foreach(computeExpressionResult(symbols, _, writer, availableRegisters))

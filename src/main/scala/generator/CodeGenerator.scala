@@ -10,12 +10,7 @@ object CodeGenerator {
   def generateCode(ast: ASTNode, symbolTableWithMemoryOffsets: SymbolMemoryTable, moonOutputFile: String): Unit = {
     val writer = new PrintWriter(new File(moonOutputFile))
 
-    writer.write(f"${" "}%-15s entry %% Start here\n")
-
     createFunctionsAndMain(symbolTableWithMemoryOffsets, ast, writer)
-
-    writer.write(f"${" "}%-15s hlt   %% Stop here\n")
-
     allocateMemory(symbolTableWithMemoryOffsets, writer)
 
     writer.close()
@@ -28,7 +23,10 @@ object CodeGenerator {
     * @param writer program file writer
     */
   def createFunctionsAndMain(table: SymbolMemoryTable, node: ASTNode, writer: PrintWriter): Unit = {
+    writer.write(f"${" "}%-15s entry %% Start here\n")
     traverseMain(table, node, writer)
+    writer.write(f"${" "}%-15s hlt   %% Stop here\n")
+    traverseOtherFunctions(table, node, writer)
   }
 
   /**
@@ -42,6 +40,27 @@ object CodeGenerator {
         t.symbols.foreach(e => writer.write(f"${e.name}%-15s res ${e.size}\n"))
       })
     })
+  }
+
+  def allocateMemoryForFunction(table: SymbolMemoryTable, functionName: String,
+                                className: Option[String], writer: PrintWriter): Unit = {
+    className.fold(
+      table.symbols.find(s => s.kind.equals("function") && s.name.equals(functionName)).fold()(l => {
+        l.link.fold()(t => {
+          t.symbols.foreach(e => writer.write(f"${e.name}%-15s res ${e.size}\n"))
+        })
+      })
+    )(name =>
+      table.symbols.find(s => s.kind.equals("class") && s.name.equals(name)).fold()(c => {
+        c.link.fold()(t => {
+          t.symbols.find(s => s.kind.equals("function") && s.name.equals(functionName)).fold()(l => {
+            l.link.fold()(v => {
+              v.symbols.foreach(e => writer.write(f"${e.name}%-15s res ${e.size}\n"))
+            })
+          })
+        })
+      })
+    )
   }
 
 }
