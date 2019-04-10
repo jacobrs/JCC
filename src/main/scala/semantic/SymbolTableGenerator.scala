@@ -113,6 +113,10 @@ class SymbolTableGenerator {
         }else{
           root.children.foreach(validateAssignments(_, scope))
         }
+      case "arraySizeWrapper" =>
+        validateSubtreeIsOnlyOfTypeX("integer", root, scope)
+      case "indice" =>
+        validateSubtreeIsOnlyOfTypeX("integer", root, scope)
       case "idnest" =>
         // validate function call
         if(root.children(1).children.head.value == "("){
@@ -246,6 +250,11 @@ class SymbolTableGenerator {
             )
           }
         }
+        root.children.foreach(traverseAttributes(_, table))
+      case "arraySizeWrapper" =>
+        validateSubtreeIsOnlyOfTypeX("integer", root, globalTable)
+      case "indice" =>
+        validateSubtreeIsOnlyOfTypeX("integer", root, globalTable)
       case "genericDecl" =>
         // detected variable declaration
         val varType = root.children.head.children.head.value
