@@ -7,3 +7,4 @@ target
 *.pages
 .DS_Store
 *.iml
+output/*
