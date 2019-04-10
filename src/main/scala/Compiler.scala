@@ -14,9 +14,9 @@ object Compiler {
 
   def main (args: Array[String]): Unit = {
 
-    val programFiles = 5
+    val programFiles = 6
 
-    for(i <- 5 to programFiles) {
+    for(i <- 6 to programFiles) {
 
       System.out.println(s"Compiling program$i.txt")
 

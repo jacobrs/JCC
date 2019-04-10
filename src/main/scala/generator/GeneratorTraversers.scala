@@ -58,12 +58,15 @@ object GeneratorTraversers {
         traverseAssignStartAndVar(symbols, node.children.last, writer, target.value, node)
         traverseAssignStartAndVar(symbols, node.children(1), writer, target.value, node)
       case "statement" =>
-        if(node.children.exists(p => p.value.equals("write"))) {
+        if(node.children.exists(_.value.equals("write"))) {
           GeneratorIO.traverseWrite(symbols, node.children(2), writer)
           node.children.foreach(traverseFunction(symbols, _, writer))
         }
-        if(node.children.exists(p => p.value.equals("if"))) {
+        else if(node.children.exists(_.value.equals("if"))) {
           GeneratorConditional.traverseIfStatement(symbols, node, writer)
+        }
+        else if(node.children.exists(_.value.equals("for"))) {
+          GeneratorConditional.traverseForStatement(symbols, node, writer)
         }
         else {
           node.children.foreach(traverseFunction(symbols, _, writer))
@@ -121,6 +124,48 @@ object GeneratorTraversers {
   def computeExpressionResult(symbols: SymbolMemoryTable, node: ASTNode, writer: PrintWriter,
                               availableRegisters: Seq[String]): String = {
     node.metadata match {
+      case Some(_) =>
+        computeFactor(symbols, node, writer, availableRegisters)
+      case None =>
+        node.value match {
+          case "arithExpr" =>
+            (node.children(1).children.size > 1).fold({
+              val t1 = computeExpressionResult(symbols, node.children.head, writer, availableRegisters.tail)
+              var navail = availableRegisters.tail
+              val t2 = computeExpressionResult(symbols, node.children(1), writer, navail.tail)
+              navail = navail.tail
+              node.children(1).children.head.children.head.value match {
+                case "+" => writer.write(f"${" "}%-15s add   ${availableRegisters.head},$t1,$t2\n")
+                case "-" => writer.write(f"${" "}%-15s sub   ${availableRegisters.head},$t1,$t2\n")
+              }
+              availableRegisters.head
+            },{
+              computeExpressionResult(symbols, node.children.head, writer, availableRegisters)
+            })
+          case "term" =>
+            (node.children(1).children.size > 1).fold({
+              val t1 = computeExpressionResult(symbols, node.children.head, writer, availableRegisters.tail)
+              var navail = availableRegisters.tail
+              val t2 = computeExpressionResult(symbols, node.children(1), writer, navail.tail)
+              navail = navail.tail
+              node.children(1).children.head.children.head.value match {
+                case "*" => writer.write(f"${" "}%-15s mul   ${availableRegisters.head},$t1,$t2\n")
+                case "/" => writer.write(f"${" "}%-15s div   ${availableRegisters.head},$t1,$t2\n")
+              }
+              availableRegisters.head
+            },{
+              computeFactor(symbols, node.children.head, writer, availableRegisters)
+            })
+          case _ =>
+            node.children.foreach(computeExpressionResult(symbols, _, writer, availableRegisters))
+            availableRegisters.head
+        }
+    }
+  }
+
+  def computeFactor(symbols: SymbolMemoryTable, node: ASTNode, writer: PrintWriter,
+                    availableRegisters: Seq[String]): String ={
+    node.metadata match {
       case Some("INTEGER") =>
         writer.write(f"${" "}%-15s addi  ${availableRegisters.head},r0,${node.value}\n")
         availableRegisters.head
@@ -131,7 +176,7 @@ object GeneratorTraversers {
         writer.write(f"${" "}%-15s lw    ${availableRegisters.head},${node.value}(r0)\n")
         availableRegisters.head
       case _ =>
-        node.children.foreach(computeExpressionResult(symbols, _, writer, availableRegisters))
+        node.children.map(computeFactor(symbols, _, writer, availableRegisters))
         availableRegisters.head
     }
   }

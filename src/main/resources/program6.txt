@@ -1,5 +1,12 @@
 main {
-    for(integer i = 0; i < 10; i = i +1){
-        write(i);
-    };
-}
+    integer b = 0;
+    for(integer i = 1; i <= 10; i = i +1)
+        for(integer y = 1; y <= 10; y = y + 1){
+            b = i + y;
+            write(b);
+        };
+    ;
+
+    integer a = 5 * ((6 + 12) / 9);
+    write(a);
+};

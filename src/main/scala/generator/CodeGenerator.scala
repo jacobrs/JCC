@@ -2,8 +2,8 @@ package generator
 
 import java.io.{File, PrintWriter}
 
-import parser.ASTNode
 import generator.GeneratorTraversers._
+import parser.ASTNode
 
 object CodeGenerator {
 
@@ -12,6 +12,7 @@ object CodeGenerator {
 
     createFunctionsAndMain(symbolTableWithMemoryOffsets, ast, writer)
     allocateMemory(symbolTableWithMemoryOffsets, writer)
+    allocateMemoryForForLoops(symbolTableWithMemoryOffsets, ast, writer)
 
     writer.close()
   }
@@ -61,6 +62,17 @@ object CodeGenerator {
         })
       })
     )
+  }
+
+  def allocateMemoryForForLoops(symbols: SymbolMemoryTable, node: ASTNode, writer: PrintWriter): Unit = {
+    node.value match {
+      case "statement" =>
+        if(node.children.exists(_.value.equals("for"))) {
+          GeneratorConditional.allocateForCounters(symbols, node, writer)
+          node.children.foreach(allocateMemoryForForLoops(symbols, _, writer))
+        }
+      case _ => node.children.foreach(allocateMemoryForForLoops(symbols, _, writer))
+    }
   }
 
 }
