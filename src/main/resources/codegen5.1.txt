@@ -1,0 +1,25 @@
+class A {
+    integer amember;
+    integer bmember[12];
+};
+
+class B: A {
+    C cmember;
+    C cmembers[4];
+    integer export(integer j);
+};
+
+class C {
+    integer cmember[10][10];
+};
+
+integer B::export(integer j){
+    return(j);
+};
+
+main {
+    B blocal;
+    integer j;
+    C clocal;
+    A alocal;
+};

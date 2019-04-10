@@ -1,0 +1,12 @@
+class A {
+    integer a;
+};
+
+class B: A {
+    integer a;
+};
+
+main{
+    integer k;
+    integer k;
+};

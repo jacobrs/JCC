@@ -1,0 +1,8 @@
+integer output(integer a){
+    write(a);
+    return(0);
+};
+
+main{
+    output(12);
+};

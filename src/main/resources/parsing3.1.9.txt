@@ -1,0 +1,9 @@
+integer noop(){
+    read(a);
+    write(12);
+    return(2);
+};
+
+main {
+    noop();
+};

@@ -1,0 +1,8 @@
+main {
+    integer a = 3 + (4 * (6 / 2));
+    integer b = 8 - 4 / 2;
+    integer c = a * b;
+    write(a);
+    write(b);
+    write(c);
+};

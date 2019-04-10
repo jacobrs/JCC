@@ -44,7 +44,7 @@ object Compiler extends App {
     a2ccWriter.close()
 
     // ast generation
-    val result = Parser.parse(tokens)
+    val result = Parser.parse(tokens, program)
     astWriter.write(result.tree.print())
     astWriter.close()
 

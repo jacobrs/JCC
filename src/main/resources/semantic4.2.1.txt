@@ -1,0 +1,10 @@
+integer iReturnInts() {
+    return(12.0);
+};
+
+main {
+    integer b;
+    float e;
+    b = 1 + 12.0;
+    e = 12 * 32.2e12;
+};

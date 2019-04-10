@@ -1,0 +1,12 @@
+class Demo {
+    integer print(integer b);
+};
+
+integer Demo::print(integer b) {
+    write(b);
+};
+
+main {
+    Demo demo;
+    integer output = demo.print(12);
+};

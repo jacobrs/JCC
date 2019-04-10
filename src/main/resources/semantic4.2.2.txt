@@ -1,0 +1,9 @@
+integer countme(integer a, float b){
+    return(a);
+};
+
+main{
+    countme(1);
+    countme(1.0);
+    countme(2.0, 3.0);
+};

@@ -23,13 +23,16 @@ object Tokenizer extends Enumeration {
       replaceAll(singleLineComment.regex, "")
   }
 
+  var col = 1
+  var row = 1
+
   def parse(body: String): Seq[Token] = {
     val cleanBody = scan(body)
     var tokens = Seq.empty[Token]
     var currentState = State(STARTING_TAG, Seq())
 
-    var col = 1
-    var row = 1
+    col = 1
+    row = 1
     cleanBody.foreach {
       c => {
         if(c.equals('\n')){
@@ -92,7 +95,7 @@ object Tokenizer extends Enumeration {
               case Digit(l) =>
                 newState = State(DOUBLE_ZERO_FLOAT_TAG, p ++ Seq(l))
               case _ =>
-                System.out.println(s"Invalid float ${p.mkString("")}")
+                System.out.println(s"[error] invalid float ${p.mkString("")} @ L$row:$col")
                 newState = runEmptyStateAfterTokenCompletion(c)
             }
           case State(NON_ZERO_FLOAT_TAG, p) =>
@@ -116,7 +119,7 @@ object Tokenizer extends Enumeration {
               case l@('+'|'-') =>
                 newState = State(ENDING_EXPONENT_FLOAT_TAG, p ++ Seq(l))
               case _ =>
-                System.out.println(s"Invalid float ${p.mkString("")}")
+                System.out.println(s"[error] invalid float ${p.mkString("")} @ L$row:$col")
                 newState = runEmptyStateAfterTokenCompletion(c)
             }
           case State(ENDING_EXPONENT_FLOAT_TAG, p) =>
@@ -126,7 +129,7 @@ object Tokenizer extends Enumeration {
               case Digit(l) =>
                 newState = State(FLOAT_ZERO_INTEGER_TAG, p ++ Seq(l))
               case _ =>
-                System.out.println(s"Invalid float ${p.mkString("")}")
+                System.out.println(s"[error] invalid float ${p.mkString("")} @ L$row:$col")
                 newState = runEmptyStateAfterTokenCompletion(c)
             }
           case State(FLOAT_INTEGER_TAG, p) =>
@@ -166,7 +169,7 @@ object Tokenizer extends Enumeration {
             newState = runEmptyStateAfterTokenCompletion(c)
           case s =>
             System.out.println(
-              s"Invalid state ${s.name} at character ${s.prevChars.head} position: $col")
+              s"[error] invalid state ${s.name} at character ${s.prevChars.head} @ L$row:$col")
             newState = runEmptyStateAfterTokenCompletion(c)
         }
         currentState = newState

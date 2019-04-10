@@ -1,0 +1,4 @@
+main {
+    integer j = 0;
+    j = i;
+};

@@ -1,0 +1,15 @@
+main {
+    if(8 == 9) then
+        if(9 > 8) then {
+            write(12);
+        } else {
+            write(b);
+        };
+    else
+        if(12 < 10) then
+            write(1);
+        else
+            write(3);
+        ;
+    ;
+};

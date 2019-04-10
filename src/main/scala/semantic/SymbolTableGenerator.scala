@@ -22,14 +22,11 @@ class SymbolTableGenerator {
     // extract current node
     root.value match {
       case "classDecl" =>
-        println("[info] classDecl creating class symbol")
         globalTable.addSymbol(traverseClass(root))
       case "funcDef" =>
-        println("[info] funcDef creating function symbol")
         traverseFunction(root).fold()(globalTable.addSymbol)
       case "funcBody" =>
         // this is the main body
-        println("[info] funcBody creating class symbol, main")
         val functionTable = new SymbolTable("main")
         traverseAttributes(root, functionTable)
         globalTable.addSymbol(SymbolEntry("main", "function", "void", Some(functionTable)))
@@ -109,6 +106,20 @@ class SymbolTableGenerator {
 
   def validateAssignments(root: ASTNode, scope: SymbolTable): Unit = {
     root.value match {
+      case "variableAndFunctionCall" =>
+        // validate function call
+        if(root.children(2).children.head.value == "("){
+          validateAParams(root.children(2).children(1), scope, root.children.head.value, None)
+        }else{
+          root.children.foreach(validateAssignments(_, scope))
+        }
+      case "idnest" =>
+        // validate function call
+        if(root.children(1).children.head.value == "("){
+          validateAParams(root.children(1).children(1), scope, root.children.head.value, None)
+        }else{
+          root.children.foreach(validateAssignments(_, scope))
+        }
       case "assignStatAndVar" =>
         // detected variable
         val varType = root.children.head.value
@@ -124,10 +135,56 @@ class SymbolTableGenerator {
             val expr = root.children(2).children(1)
             validateSubtreeIsOnlyOfTypeX(deriveTypeFromID(varType, scope).getOrElse("Null"), expr, scope)
           }
+          if(root.children(1).children.size > 1 && root.children(1).children(1).value == "aParams"){
+            // validate function call
+            validateAParams(root.children(1).children(1), scope, root.children.head.value, None)
+          }
+        } else {
+          root.children.foreach(validateAssignments(_, scope))
         }
       case _ =>
         root.children.foreach(validateAssignments(_, scope))
     }
+  }
+
+  def validateAParams(root: ASTNode, scope: SymbolTable, functionName: String, className: Option[String]): Unit = {
+    val functionTable = className.fold(globalTable.symbols.find(
+      p => p.name.equals(functionName) && p.kind.equals("function")).fold({
+      errors = errors ++ Seq(
+        SemanticError(s"[error] semantic error function $functionName not defined", root.location))
+      new SymbolTable("undefined")
+    })(t => t.link.get))(cname => globalTable.symbols.find(
+      p => p.name.equals(cname) && p.kind.equals("class")).fold({
+      errors = errors ++ Seq(
+        SemanticError(s"[error] semantic error class $cname not defined", root.location))
+      new SymbolTable("undefined")
+    })(ct => ct.link.get.symbols.find(
+      p => p.name.equals(functionName) && p.kind.equals("function")).fold({
+      errors = errors ++ Seq(
+        SemanticError(s"[error] semantic error function $functionName not defined", root.location))
+      new SymbolTable("undefined")
+    })(t => t.link.get)))
+
+    if(functionTable.name != "undefined") {
+      val exprs = huntExpr(root)
+      if (!exprs.size.equals(functionTable.symbols.count(_.kind.equals("parameter")))) {
+        errors = errors ++ Seq(
+          SemanticError(s"[error] wrong amount of parameters sent to function $functionName", root.location))
+      } else {
+        functionTable.symbols.filter(_.kind.equals("parameter")).zipWithIndex.foreach(p => {
+          validateSubtreeIsOnlyOfTypeX(p._1.dataType, exprs(p._2), scope)
+        })
+      }
+    }
+  }
+
+  def huntExpr(root: ASTNode): Seq[ASTNode] = {
+    var returnedSeq = Seq.empty[ASTNode]
+    root.children.foreach(c => c.value match {
+      case "expr" => returnedSeq = returnedSeq ++ Seq(c)
+      case _ => returnedSeq = returnedSeq ++ c.children.flatMap(huntExpr)
+    })
+    returnedSeq
   }
 
   /**

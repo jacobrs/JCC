@@ -1,0 +1,10 @@
+class Demo {
+    integer thisIsAnInt;
+    float thisIsAFloat;
+    integer thisIsAnArray[10];
+};
+
+main {
+    Demo thisIsADemo;
+    Demo thisIsManyDemos[10][10];
+};

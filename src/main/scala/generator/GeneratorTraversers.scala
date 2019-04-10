@@ -97,14 +97,15 @@ object GeneratorTraversers {
 
   def transferFunctionParameters(functionTable: SymbolMemoryTable, node: ASTNode, writer: PrintWriter): Unit = {
     val parameters = functionTable.symbols.filter(_.kind.equals("parameter"))
-    var expressionRegisters = recursivelyFindExpressions(functionTable, node, writer)
+    var expressionRegisters = recursivelyFindExpressions(functionTable, node, writer, allRegisters)
     parameters.foreach(p => {
       writer.write(f"${" "}%-15s sw    ${p.name}(r0),${expressionRegisters.head}\n")
       expressionRegisters = expressionRegisters.tail
     })
   }
 
-  def recursivelyFindExpressions(functionTable: SymbolMemoryTable, node: ASTNode, writer: PrintWriter): Seq[String] = {
+  def recursivelyFindExpressions(functionTable: SymbolMemoryTable, node: ASTNode, writer: PrintWriter,
+                                 availableRegisters: Seq[String]): Seq[String] = {
     var registerPool = allRegisters
     var expressionRegisters = Seq.empty[String]
     node.children.foreach(n => n.value match {
@@ -116,7 +117,8 @@ object GeneratorTraversers {
         }, {
           println(s"[error] ran out of registers for function parameters function ${functionTable.name}")
         })
-      case _ => // noop
+      case _ =>
+        expressionRegisters = expressionRegisters ++ recursivelyFindExpressions(functionTable, n, writer, registerPool)
     })
     expressionRegisters
   }

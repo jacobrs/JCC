@@ -1,0 +1,9 @@
+integer output(integer a){
+    write(a);
+    return(0);
+};
+
+main{
+    integer i = 13;
+    output(i);
+};

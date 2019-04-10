@@ -1,0 +1,9 @@
+class A {
+    integer b;
+};
+
+main{
+    A a;
+    test(13);
+    integer c = a.test(12);
+};

@@ -1,0 +1,14 @@
+class Outer {
+    int a[10];
+};
+
+class Inner {
+    int b[10][10];
+    Outer o;
+};
+
+main {
+    Inner inner;
+    integer c = inner.o.a[1];
+    integer d = inner.b[3+(5*10)][12+c];
+};

@@ -17,6 +17,10 @@ float Compiler::test(float t) {
     return (12.2);
 };
 
+float free(float f) {
+    return(10.0);
+};
+
 main {
     Compiler comp;
     integer results[10][10];

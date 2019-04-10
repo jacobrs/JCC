@@ -1,0 +1,8 @@
+main {
+    integer i;
+    integer k;
+    i = 14;
+    k = 15;
+    k = i + k;
+    write(k);
+};

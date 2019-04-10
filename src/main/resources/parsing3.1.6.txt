@@ -1,0 +1,8 @@
+main {
+    integer longExpression = 8 <> (1 + (4 * (5 / (8 - 4))));
+    integer logic = 5 <= 10;
+    integer logic2 = 5 < 10;
+    integer logic3 = 5 > 10;
+    integer logic4 = 5 >= 10;
+    integer logic5 = !5;
+};

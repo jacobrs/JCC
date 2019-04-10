@@ -1,0 +1,21 @@
+class SuperDemo {
+    integer a;
+    integer sum(integer c);
+};
+
+class Demo: SuperDemo {
+    integer b;
+    integer product(integer d);
+};
+
+integer SuperDemo::sum(integer c){
+    write(c);
+};
+
+integer Demo::product(integer d){
+    write(d);
+};
+
+main {
+    // do nothing
+};

@@ -1,0 +1,8 @@
+main {
+    for(integer i = 1; i <= 10; i = i +1)
+        for(integer y = 1; y <= 10; y = y + 1){
+            write(i);
+            write(y);
+        };
+    ;
+};

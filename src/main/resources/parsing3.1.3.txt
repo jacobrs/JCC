@@ -1,0 +1,7 @@
+integer sum(integer a, integer b){
+    return(a+b);
+};
+
+main{
+    sum(1, 2);
+};
