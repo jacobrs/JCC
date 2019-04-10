@@ -37,7 +37,7 @@ object CodeGenerator {
   def allocateMemory(table: SymbolMemoryTable, writer: PrintWriter): Unit = {
     table.symbols.find(s => s.kind.equals("function") && s.name.equals("main")).fold()(l => {
       l.link.fold()(t => {
-        t.symbols.foreach(e => writer.write(f"${e.name}%-15s res ${e.size}\n"))
+        t.symbols.foreach(e => writer.write(f"${e.name}%-15s res   ${e.size}\n"))
       })
     })
   }
@@ -47,7 +47,7 @@ object CodeGenerator {
     className.fold(
       table.symbols.find(s => s.kind.equals("function") && s.name.equals(functionName)).fold()(l => {
         l.link.fold()(t => {
-          t.symbols.foreach(e => writer.write(f"${e.name}%-15s res ${e.size}\n"))
+          t.symbols.foreach(e => writer.write(f"${e.name}%-15s res   ${e.size}\n"))
         })
       })
     )(name =>
@@ -55,7 +55,7 @@ object CodeGenerator {
         c.link.fold()(t => {
           t.symbols.find(s => s.kind.equals("function") && s.name.equals(functionName)).fold()(l => {
             l.link.fold()(v => {
-              v.symbols.foreach(e => writer.write(f"${e.name}%-15s res ${e.size}\n"))
+              v.symbols.foreach(e => writer.write(f"${e.name}%-15s res   ${e.size}\n"))
             })
           })
         })

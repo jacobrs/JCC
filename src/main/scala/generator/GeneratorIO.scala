@@ -20,6 +20,8 @@ object GeneratorIO {
     }
     if(first){
       writer.write(f"${" "}%-15s jl    r15,putint\n")
+      writer.write(f"${" "}%-15s addi  r1,r0,10\n")
+      writer.write(f"${" "}%-15s putc  r1\n")
     }
   }
 

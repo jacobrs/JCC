@@ -16,6 +16,14 @@ integer print(integer toBePrinted) {
 main {
     integer myint = 10;
     Crusher crusher;
-    write(myint);
-    print(12);
+    if(myint <= 10) then {
+        write(myint);
+        if(12 < 0) then {
+            write(12);
+        } else {
+            write(0);
+        };
+    } else {
+        print(12);
+    };
 };
